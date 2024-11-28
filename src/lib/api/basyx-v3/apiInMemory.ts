@@ -10,6 +10,7 @@ import {
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
 import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
 import { encodeBase64, safeBase64Decode } from 'lib/util/Base64Util';
+import { AasRepositoryResponse } from 'lib/api/basyx-v3/api';
 
 const options = {
     headers: { 'Content-type': 'application/json; charset=utf-8' },
@@ -35,7 +36,7 @@ export class AssetAdministrationShellRepositoryApiInMemory implements IAssetAdmi
         _limit?: number | undefined,
         _cursor?: string | undefined,
         _options?: object | undefined,
-    ): Promise<ApiResponseWrapper<AssetAdministrationShell[]>> {
+    ): Promise<ApiResponseWrapper<AasRepositoryResponse>> {
         throw new Error('Method not implemented.');
     }
 

@@ -10,7 +10,7 @@ export async function getAasListEntries(): Promise<AasListEntry[]> {
     return aasListApi.getAasListEntries();
 }
 
-export async function getAllAssetAdministrationShells(targetRepository: string, limit: number, cursor?: string) {
+export async function getAasListEntities(targetRepository: string, limit: number, cursor?: string) {
     const listService = ListService.create(targetRepository);
-    return listService.getAllAssetAdministrationShells(limit, cursor);
+    return listService.getAasListEntities(limit, cursor);
 }

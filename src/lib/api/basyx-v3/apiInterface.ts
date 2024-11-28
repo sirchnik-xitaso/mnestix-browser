@@ -2,6 +2,7 @@ import { AssetAdministrationShell, Reference } from '@aas-core-works/aas-core3.0
 import { Submodel } from '@aas-core-works/aas-core3.0-typescript/dist/types/types';
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
 import { ApiResponseWrapper } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
+import { AasRepositoryResponse } from 'lib/api/basyx-v3/api';
 
 export interface IAssetAdministrationShellRepositoryApi {
     /**
@@ -13,8 +14,8 @@ export interface IAssetAdministrationShellRepositoryApi {
         limit?: number,
         cursor?: string,
         options?: object,
-    ): Promise<ApiResponseWrapper<AssetAdministrationShell[]>>;
-    
+    ): Promise<ApiResponseWrapper<AasRepositoryResponse>>;
+
     /**
      * @summary Retrieves a specific Asset Administration Shell from the Asset Administration Shell repository
      * @param {string} aasId The Asset Administration Shell&#x27;s unique id

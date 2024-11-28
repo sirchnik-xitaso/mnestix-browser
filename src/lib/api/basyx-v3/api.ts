@@ -33,6 +33,11 @@ export class RequiredError extends Error {
     }
 }
 
+export type AasRepositoryResponse = {
+    paging_metadata: { cursor: string };
+    result: AssetAdministrationShell[];
+};
+
 /**
  * AssetAdministrationShellRepositoryApi - object-oriented interface
  * @class AssetAdministrationShellRepositoryApi
@@ -136,7 +141,7 @@ export const AssetAdministrationShellRepositoryApiFp = function (configuration?:
 
                 localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options?.headers);
 
-                return await requestHandler.fetch<AssetAdministrationShell[]>(
+                return await requestHandler.fetch<AasRepositoryResponse>(
                     basePath + `/shells?limit=${limit}&cursor=${cursorQueryParameter}`,
                     localVarRequestOptions,
                 );
