@@ -9,7 +9,7 @@ import {
 } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
 import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
-import { safeBase64Decode, encodeBase64 } from 'lib/util/Base64Util';
+import { encodeBase64, safeBase64Decode } from 'lib/util/Base64Util';
 
 const options = {
     headers: { 'Content-type': 'application/json; charset=utf-8' },
@@ -29,6 +29,14 @@ export class AssetAdministrationShellRepositoryApiInMemory implements IAssetAdmi
 
     getBaseUrl(): string {
         return this.baseUrl;
+    }
+
+    getAllAssetAdministrationShells(
+        _limit?: number | undefined,
+        _cursor?: string | undefined,
+        _options?: object | undefined,
+    ): Promise<ApiResponseWrapper<AssetAdministrationShell[]>> {
+        throw new Error('Method not implemented.');
     }
 
     async postAssetAdministrationShell(

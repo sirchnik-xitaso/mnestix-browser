@@ -9,6 +9,12 @@ export interface IAssetAdministrationShellRepositoryApi {
      */
     getBaseUrl(): string;
 
+    getAllAssetAdministrationShells(
+        limit?: number,
+        cursor?: string,
+        options?: object,
+    ): Promise<ApiResponseWrapper<AssetAdministrationShell[]>>;
+    
     /**
      * @summary Retrieves a specific Asset Administration Shell from the Asset Administration Shell repository
      * @param {string} aasId The Asset Administration Shell&#x27;s unique id
