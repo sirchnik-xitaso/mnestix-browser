@@ -13,8 +13,8 @@ env:
   IMAGE_TAG: latest
   # Update the version manually
   IMAGE_TAG_VERSION: 1.3.0
-  REGISTRY_USER: ${{ vars.REGISTRY_USER }}
-  REGISTRY_PASS: ${{ secrets.REGISTRY_PASS }}
+  REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+  REGISTRY_PASS: ${{ secrets.DOCKER_API_TOKEN }}
 
 jobs:
   default:
