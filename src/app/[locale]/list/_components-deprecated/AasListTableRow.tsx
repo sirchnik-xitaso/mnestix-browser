@@ -19,7 +19,7 @@ import { isValidUrl } from 'lib/util/UrlUtil';
 import { useState } from 'react';
 import { mapFileDtoToBlob } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { useEnv } from 'app/env/provider';
-import {ImageWithFallback} from "components/basics/StyledImageWithFallBack";
+import { ImageWithFallback } from 'components/basics/StyledImageWithFallBack';
 
 type AasTableRowProps = {
     aasListEntry: AasListEntry;
