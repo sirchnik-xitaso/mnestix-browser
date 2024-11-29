@@ -13,7 +13,7 @@ import { AasListComparisonHeader } from 'app/[locale]/list/_components/AasListCo
 import AasList from 'app/[locale]/list/_components/AasList';
 import { useIntl } from 'react-intl';
 import { messages } from 'lib/i18n/localization';
-import { getAasListEntities, getAasListEntries } from 'lib/services/list-service/aasListApiActions';
+import { getAasListEntries } from 'lib/services/list-service/aasListApiActions';
 
 export const AasListView = () => {
     const [isLoadingList, setIsLoadingList] = useState(false);
@@ -28,8 +28,6 @@ export const AasListView = () => {
         try {
             setIsLoadingList(true);
             const list = await getAasListEntries();
-            const testList = await getAasListEntities(env.AAS_REPO_API_URL!, 5, undefined);
-            console.log(testList);
             setAasList(list);
             setAasListFiltered(list);
         } catch (e) {
