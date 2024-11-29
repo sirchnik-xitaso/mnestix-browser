@@ -32,12 +32,27 @@ export class AssetAdministrationShellRepositoryApiInMemory implements IAssetAdmi
         return this.baseUrl;
     }
 
-    getAllAssetAdministrationShells(
+    async getAllAssetAdministrationShells(
         _limit?: number | undefined,
         _cursor?: string | undefined,
         _options?: object | undefined,
     ): Promise<ApiResponseWrapper<AasRepositoryResponse>> {
-        throw new Error('Method not implemented.');
+        if (this.reachable !== ServiceReachable.Yes)
+            return wrapErrorCode(ApiResultStatus.UNKNOWN_ERROR, 'Service not reachable');
+
+        const shells = this.shellsInRepository;
+        let cursor = '';
+        if (shells.size > 0) {
+            cursor = [...shells].pop()?.[0] ?? '';
+        }
+        const response = new Response(
+            JSON.stringify({
+                paging_metadata: { cursor: cursor },
+                result: Array.from(shells.values()),
+            }),
+            options,
+        );
+        return await wrapResponse(response);
     }
 
     async postAssetAdministrationShell(

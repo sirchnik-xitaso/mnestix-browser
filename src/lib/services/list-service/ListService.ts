@@ -1,6 +1,8 @@
 import { IAssetAdministrationShellRepositoryApi } from 'lib/api/basyx-v3/apiInterface';
 import { AssetAdministrationShellRepositoryApi } from 'lib/api/basyx-v3/api';
 import { mnestixFetch } from 'lib/api/infrastructure';
+import { AssetAdministrationShell } from '@aas-core-works/aas-core3.0-typescript/types';
+import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
 
 export type ListEntityDto = {
     aasId: string;
@@ -22,6 +24,18 @@ export class ListService {
         const targetAasRepositoryClient = AssetAdministrationShellRepositoryApi.create(
             targetAasRepositoryBaseUrl,
             mnestixFetch(),
+        );
+        return new ListService(targetAasRepositoryClient);
+    }
+
+    static createNull(
+        shellsInRepositories: AssetAdministrationShell[] = [],
+        targetAasRepository = ServiceReachable.Yes,
+    ): ListService {
+        const targetAasRepositoryClient = AssetAdministrationShellRepositoryApi.createNull(
+            'https://targetAasRepositoryClient.com',
+            shellsInRepositories,
+            targetAasRepository,
         );
         return new ListService(targetAasRepositoryClient);
     }
