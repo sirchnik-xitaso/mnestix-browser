@@ -29,6 +29,7 @@ export const AasListView = () => {
     useAsyncEffect(async () => {
         try {
             setIsLoadingList(true);
+            console.log(selectedRepository)
             // Load List from selectedRepository
             const list = await getAasListEntries();
             setAasList(list);

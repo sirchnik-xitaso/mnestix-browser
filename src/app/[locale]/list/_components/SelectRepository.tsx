@@ -20,6 +20,8 @@ export function SelectRepository(props: {
             if (env.AAS_REPO_API_URL) {
                 aasRepositories.push(env.AAS_REPO_API_URL);
                 setSelectedRepository(env.AAS_REPO_API_URL);
+                props.onSelectedRepositoryChanged(env.AAS_REPO_API_URL)
+
             }
             setAasRepositories(aasRepositories);
         } catch (error) {
