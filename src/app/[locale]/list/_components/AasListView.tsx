@@ -75,7 +75,7 @@ export const AasListView = () => {
     };
 
     return (
-        <> <SelectRepository onSelectedRepositoryChanged={setSelectedRepository}/>
+        <>
             {env.COMPARISON_FEATURE_FLAG && (
                 <AasListComparisonHeader
                     selectedAasList={selectedAasList}
@@ -85,7 +85,8 @@ export const AasListView = () => {
             {isLoadingList && <CenteredLoadingSpinner sx={{ mt: 10 }} />}
             {!isLoadingList && aasListFiltered && (
                 <>
-                    <Box>
+                    <Box display="flex" gap={4} marginBottom={2}>
+                        <SelectRepository onSelectedRepositoryChanged={setSelectedRepository}/>
                         <SelectProductType aasList={aasList} setAasListFiltered={setAasListFiltered} />
                     </Box>
                     <AasList

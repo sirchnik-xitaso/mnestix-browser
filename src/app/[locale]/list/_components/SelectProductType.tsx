@@ -66,7 +66,7 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
 
     return (
         <div>
-            <FormControl variant="standard" sx={{ minWidth: 120, marginTop: '16px', width: '265px' }}>
+            <FormControl variant="standard" sx={{ minWidth: 200, marginTop: '16px' }}>
                 <InputLabel id="product-select">
                     <FormattedMessage {...messages.mnestix.aasList.productClassHeading} />
                 </InputLabel>
@@ -76,7 +76,7 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
                     label={<FormattedMessage {...messages.mnestix.aasList.productClassHeading} />}
                     data-testid="product-class-select"
                     onChange={handleFilterChange}
-                >
+                    variant="standard">
                     <MenuItem value="" data-testid="product-class-select-all">
                         <FormattedMessage {...messages.mnestix.aasList.showAll} />
                     </MenuItem>

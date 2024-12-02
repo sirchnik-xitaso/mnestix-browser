@@ -24,9 +24,6 @@ export const AasListComparisonHeader = (props: CompareAasListBarType) => {
 
     return (
         <>
-            <Typography marginBottom={3}>
-                <FormattedMessage {...messages.mnestix.aasList.subtitle} />
-            </Typography>
             <Box display="flex" gap={2} alignItems="center">
                 {selectedAasList?.map((selectedAas) => (
                     <Box display="flex" flexDirection="row" alignItems="center" key={selectedAas}>
