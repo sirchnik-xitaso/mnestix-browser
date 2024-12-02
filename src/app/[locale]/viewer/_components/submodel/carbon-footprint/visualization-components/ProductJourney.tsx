@@ -90,7 +90,7 @@ export function ProductJourney(props: { addressesPerLifeCyclePhase: AddressPerLi
         <>
             <Box
                 id="map"
-                data-testid="test-map"
+                data-testid="product-journey-box"
                 sx={{
                     height: '320px',
                     width: '100%',

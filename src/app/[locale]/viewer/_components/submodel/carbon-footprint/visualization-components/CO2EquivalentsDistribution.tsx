@@ -33,7 +33,7 @@ export function CO2EquivalentsDistribution(props: {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }} data-testid="co2-equivalents-distribution-box">
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <Typography sx={{ color: 'primary.main', fontSize: 24 }}>
                     <Typography sx={{ color: 'inherit', fontSize: 'inherit', fontWeight: 600 }} component="span">

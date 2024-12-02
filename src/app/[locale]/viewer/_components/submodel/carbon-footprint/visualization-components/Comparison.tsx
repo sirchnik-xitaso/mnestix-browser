@@ -18,7 +18,7 @@ export function Comparison(props: { co2Equivalents: number }) {
     const { value: timePeriod, unit: unitOfTimePeriod } = determineTimePeriod(props.co2Equivalents);
 
     return (
-        <Box>
+        <Box data-testid="co2-comparison-box">
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
                 <Tree alt="Tree" />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
