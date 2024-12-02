@@ -2,21 +2,21 @@
 import { FormattedMessage, IntlShape, useIntl } from 'react-intl';
 import { messages } from 'lib/i18n/localization';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getProductClassId, parseProductClassFromString, ProductClass } from 'lib/util/ProductClassResolverUtil';
-import { AasListEntry } from 'lib/api/generated-api/clients.g';
+import { ProductClass } from 'lib/util/ProductClassResolverUtil';
 import { GetProductClassIcon } from './GetProductClassIcon';
 import { tooltipText } from 'lib/util/ToolTipText';
+import { ListEntityDto } from 'lib/services/list-service/ListService';
 
 type SelectProductTypeProps = {
-    aasList: AasListEntry[] | undefined;
-    setAasListFiltered: Dispatch<SetStateAction<AasListEntry[] | undefined>>;
+    aasList: ListEntityDto[] | undefined;
+    setAasListFiltered: Dispatch<SetStateAction<ListEntityDto[] | undefined>>;
 };
 
 export const SelectProductType = (props: SelectProductTypeProps) => {
     const { aasList, setAasListFiltered } = props;
     const [productClassFilterValue, setProductClassFilterValue] = useState<string>('');
     const [productClass, setProductClass] = useState<ProductClass[]>([]);
-    const [filteredAasListCount, setfilteredAasListCount] = useState(0);
+    const [filteredAasListCount,] = useState(0);
     const intl = useIntl();
     /**
      * Creates the ProductClass Filter values.
@@ -24,7 +24,7 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
     useEffect(() => {
         const productClasses: ProductClass[] = [];
         if (aasList) {
-            aasList.forEach((aas) => {
+/*            aasList.forEach((aas) => {
                 if (!aas.productGroup) return;
                 const productClassId = getProductClassId(aas.productGroup);
                 const productClassString = translateProductClassId(productClassId, intl);
@@ -32,7 +32,7 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
                 if (!productClasses.find((element) => element.id === productClass.id)) {
                     productClasses.push(productClass);
                 }
-            });
+            });*/
         }
         setProductClass(productClasses);
     }, [aasList]);
@@ -56,17 +56,17 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
         if (event.target.value === '') {
             setAasListFiltered(aasList);
         } else {
-            const filteredList = aasList.filter((aas) => {
+/*            const filteredList = aasList.filter((aas) => {
                 return aas.productGroup && aas.productGroup.startsWith(event.target.value);
             });
             setAasListFiltered(filteredList);
-            setfilteredAasListCount(filteredList.length);
+            setfilteredAasListCount(filteredList.length); */
         }
     };
 
     return (
-        <div>
-            <FormControl variant="standard" sx={{ minWidth: 200, marginTop: '16px' }}>
+        <>
+            <FormControl variant="standard" sx={{ minWidth: 200 }}>
                 <InputLabel id="product-select">
                     <FormattedMessage {...messages.mnestix.aasList.productClassHeading} />
                 </InputLabel>
@@ -105,6 +105,6 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
                     <b>{translateProductClassId(productClassFilterValue, intl)}</b>
                 </p>
             )}
-        </div>
+        </>
     );
 };
