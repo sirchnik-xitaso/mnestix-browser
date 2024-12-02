@@ -13,7 +13,7 @@ import { AasListComparisonHeader } from 'app/[locale]/list/_components-deprecate
 import AasList from 'app/[locale]/list/_components-deprecated/AasList';
 import { useIntl } from 'react-intl';
 import { messages } from 'lib/i18n/localization';
-import { getAasListEntries } from 'lib/services/aasListApiActions';
+import { getAasListEntries } from 'lib/services/list-service/aasListApiActions';
 
 export const AasListViewDeprecated = () => {
     const [isLoadingList, setIsLoadingList] = useState(false);

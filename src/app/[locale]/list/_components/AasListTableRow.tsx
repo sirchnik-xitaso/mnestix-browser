@@ -1,15 +1,11 @@
-import { Box, Checkbox, Chip, TableCell, Typography } from '@mui/material';
+import { Box, Checkbox, TableCell, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { messages } from 'lib/i18n/localization';
-import { getProductClassId } from 'lib/util/ProductClassResolverUtil';
-import LabelOffIcon from '@mui/icons-material/LabelOff';
-import { AasListEntry } from 'lib/api/generated-api/clients.g';
 import { encodeBase64 } from 'lib/util/Base64Util';
 import { useRouter } from 'next/navigation';
 import { useAasOriginSourceState, useAasState } from 'components/contexts/CurrentAasContext';
 import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
 import { ImageWithFallback } from 'components/basics/StyledImageWithFallBack';
-import { ProductClassChip } from 'app/[locale]/list/_components/ProductClassChip';
 import { tooltipText } from 'lib/util/ToolTipText';
 import PictureTableCell from 'components/basics/listBasics/PictureTableCell';
 import { ArrowForward } from '@mui/icons-material';
@@ -20,9 +16,10 @@ import { isValidUrl } from 'lib/util/UrlUtil';
 import { useState } from 'react';
 import { mapFileDtoToBlob } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { useEnv } from 'app/env/provider';
+import { ListEntityDto } from 'lib/services/list-service/ListService';
 
 type AasTableRowProps = {
-    aasListEntry: AasListEntry;
+    aasListEntry: ListEntityDto;
     comparisonFeatureFlag: boolean | undefined;
     checkBoxDisabled: (aasId: string | undefined) => boolean | undefined;
     selectedAasList: string[] | undefined;
@@ -42,21 +39,21 @@ export const AasListTableRow = (props: AasTableRowProps) => {
     const [, setAasOriginUrl] = useAasOriginSourceState();
     const notificationSpawner = useNotificationSpawner();
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
-    const navigateToAas = (listEntry: AasListEntry) => {
+    const navigateToAas = (listEntry: ListEntityDto) => {
         setAas(null);
         setAasOriginUrl(null);
         if (listEntry.aasId) navigate.push(`/viewer/${encodeBase64(listEntry.aasId)}`);
     };
     const env = useEnv();
 
-    const translateListText = (property: { [key: string]: string } | undefined) => {
+/*    const translateListText = (property: { [key: string]: string } | undefined) => {
         if (!property) return '';
         return property[intl.locale] ?? Object.values(property)[0] ?? '';
-    };
+    };*/
 
     useAsyncEffect(async () => {
-        if (isValidUrl(aasListEntry.thumbnailUrl ?? '')) {
-            setThumbnailUrl(aasListEntry.thumbnailUrl ?? '');
+        if (isValidUrl(aasListEntry.thumbnail ?? '')) {
+            setThumbnailUrl(aasListEntry.thumbnail ?? '');
         } else if (aasListEntry.aasId && env.AAS_REPO_API_URL) {
             const response = await getThumbnailFromShell(aasListEntry.aasId, env.AAS_REPO_API_URL);
             if (response.isSuccess) {
@@ -65,7 +62,7 @@ export const AasListTableRow = (props: AasTableRowProps) => {
                 setThumbnailUrl(blobUrl);
             }
         }
-    }, [aasListEntry.thumbnailUrl]);
+    }, [aasListEntry.thumbnail]);
 
     const showMaxElementsNotification = () => {
         notificationSpawner.spawn({
@@ -102,10 +99,10 @@ export const AasListTableRow = (props: AasTableRowProps) => {
                 <ImageWithFallback src={thumbnailUrl} alt={'Thumbnail image for: ' + aasListEntry.assetId} size={88} />
             </PictureTableCell>
             <TableCell align="left" sx={tableBodyText}>
-                {translateListText(aasListEntry.manufacturerName)}
+                {/*{translateListText(aasListEntry.manufacturerName)}*/}
             </TableCell>
             <TableCell align="left" sx={tableBodyText}>
-                {tooltipText(translateListText(aasListEntry.manufacturerProductDesignation), 80)}
+                {/*{tooltipText(translateListText(aasListEntry.manufacturerProductDesignation), 80)}*/}
             </TableCell>
             <TableCell align="left" sx={tableBodyText}>
                 <Typography fontWeight="bold" sx={{ letterSpacing: '0.16px' }}>
@@ -118,7 +115,7 @@ export const AasListTableRow = (props: AasTableRowProps) => {
                 {tooltipText(aasListEntry.aasId, 80)}
             </TableCell>
             <TableCell align="left">
-                {aasListEntry.productGroup ? (
+              {/*  {aasListEntry.productGroup ? (
                     <ProductClassChip productClassId={getProductClassId(aasListEntry.productGroup)} maxChars={25} />
                 ) : (
                     <Chip
@@ -130,7 +127,7 @@ export const AasListTableRow = (props: AasTableRowProps) => {
                         data-testid="product-class-chip"
                         title={intl.formatMessage(messages.mnestix.aasList.titleProductChipNotAvailable)}
                     />
-                )}
+                )}*/}
             </TableCell>
             <TableCell align="center">
                 <RoundedIconButton
