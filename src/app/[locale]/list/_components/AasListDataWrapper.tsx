@@ -9,7 +9,9 @@ import AasList from './AasList';
 import { useEnv } from 'app/env/provider';
 import { SelectProductType } from './filter/SelectProductType';
 import { AasListComparisonHeader } from './AasListComparisonHeader';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { SelectRepository } from './filter/SelectRepository';
 
 export default function AasListDataWrapper() {
@@ -21,21 +23,47 @@ export default function AasListDataWrapper() {
     const notificationSpawner = useNotificationSpawner();
     const [selectedRepository, setSelectedRepository] = useState<string | undefined>();
 
-    useAsyncEffect(async () => {
-        if (!selectedRepository) return;
+    //Pagination
+    const [currentCursor, setCurrentCursor] = useState<string>();
+    const [cursorHistory, setCursorHistory] = useState<(string | undefined)[]>([]);
+    const [currentPage, setCurrentPage] = useState(0);
 
-        try {
-            setIsLoadingList(true);
-            const list = await getAasListEntities(selectedRepository!, 10);
-            setAasList(list);
-            setAasListFiltered(list.entities);
-        } catch (e) {
-            showError(e, notificationSpawner);
-        } finally {
-            setIsLoadingList(false);
-        }
+    useAsyncEffect(async () => {
+        await fetchListData();
     }, [selectedRepository]);
 
+    const fetchListData = async (newCursor?: string | undefined, isNext = true) => {
+        if (!selectedRepository) return;
+
+        setIsLoadingList(true);
+        const response = await getAasListEntities(selectedRepository!, 10, newCursor);
+
+        if (response.success) {
+            setAasList(response);
+            setAasListFiltered(response.entities);
+
+            setCurrentCursor(response.cursor);
+
+            if (isNext) {
+                setCursorHistory((prevHistory) => [...prevHistory, newCursor]);
+                setCurrentPage((prevPage) => prevPage + 1);
+            } else {
+                setCurrentPage((prevPage) => prevPage - 1);
+            }
+        } else {
+            showError(response.error, notificationSpawner);
+        }
+        setIsLoadingList(false);
+    };
+
+    const handleNextPage = async () => {
+        await fetchListData(currentCursor, true);
+    };
+
+    const handleGoBack = async () => {
+        const previousCursor = cursorHistory[currentPage - 2] ?? undefined;
+        await fetchListData(previousCursor, false);
+    };
 
     /**
      * Update the list of currently selected aas
@@ -62,8 +90,8 @@ export default function AasListDataWrapper() {
         <>
             <Box display="flex" justifyContent="space-between">
                 <Box display="flex" gap={4} marginBottom={2}>
-                    <SelectRepository onSelectedRepositoryChanged={setSelectedRepository}/>
-                    <SelectProductType aasList={aasList?.entities} setAasListFiltered={setAasListFiltered}/>
+                    <SelectRepository onSelectedRepositoryChanged={setSelectedRepository} />
+                    <SelectProductType aasList={aasList?.entities} setAasListFiltered={setAasListFiltered} />
                 </Box>
                 {env.COMPARISON_FEATURE_FLAG && (
                     <AasListComparisonHeader
@@ -72,13 +100,27 @@ export default function AasListDataWrapper() {
                     />
                 )}
             </Box>
-            {isLoadingList ? <CenteredLoadingSpinner sx={{ mt: 10 }}/> :
-                <AasList
-                    shells={aasList}
-                    selectedAasList={selectedAasList}
-                    updateSelectedAasList={updateSelectedAasList}
-                    comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}>
-                </AasList>}
+            {isLoadingList ? (
+                <CenteredLoadingSpinner sx={{ mt: 10 }} />
+            ) : (
+                <>
+                    <AasList
+                        shells={aasList}
+                        selectedAasList={selectedAasList}
+                        updateSelectedAasList={updateSelectedAasList}
+                        comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}
+                    ></AasList>
+                    <Box display="flex" justifyContent="flex-end" alignItems="center" gap={4} marginTop={2}>
+                        <IconButton onClick={handleGoBack} disabled={currentPage === 1}>
+                            <ArrowBackIosIcon />
+                        </IconButton>
+                        Page: {currentPage}
+                        <IconButton onClick={handleNextPage} disabled={!currentCursor}>
+                            <ArrowForwardIosIcon />
+                        </IconButton>
+                    </Box>
+                </>
+            )}
         </>
     );
 }
