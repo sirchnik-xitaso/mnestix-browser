@@ -7,10 +7,10 @@ export function CalculationMethod(props: { calculationMethod: string }) {
     const { calculationMethod } = props;
 
     return (
-        <Typography sx={{ color: 'primary.main', fontSize: 24, fontWeight: 'bold' }} data-testid="calculation-method">
+        <Typography sx={{ color: 'primary.main', fontSize: 24, fontWeight: 'bold' }} data-testid="co2-calculation-method">
             {calculationMethod}{' '}
             {calculationMethod === 'GHG Protocol' && (
-                <Link href={LinkGHG} target="_blank" data-testid="calculation-method-link">
+                <Link href={LinkGHG} target="_blank" data-testid="co2-calculation-method-link">
                     <OpenInNewIcon fontSize="small" />
                 </Link>
             )}

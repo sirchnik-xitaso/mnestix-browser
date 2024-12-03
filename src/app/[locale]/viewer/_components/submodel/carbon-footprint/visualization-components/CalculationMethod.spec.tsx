@@ -9,7 +9,7 @@ import {
 describe('Calculation Method', () => {
     it('should use correct style', async () => {
         CustomRenderReactIntl(<CalculationMethod calculationMethod="Artificial Goon" />);
-        const component = screen.getByTestId('calculation-method');
+        const component = screen.getByTestId('co2-calculation-method');
         expect(component).toBeDefined();
         expect(component).toBeInTheDocument();
         expect(component).toHaveStyle('color: rgb(25, 118, 210)');
@@ -19,13 +19,13 @@ describe('Calculation Method', () => {
 
     it('should display the method', async () => {
         CustomRenderReactIntl(<CalculationMethod calculationMethod="Artificial Goon" />);
-        const component = screen.getByTestId('calculation-method');
+        const component = screen.getByTestId('co2-calculation-method');
         expect(component).toHaveTextContent('Artificial Goon');
     });
 
     it('should link to GHG website', async () => {
         CustomRenderReactIntl(<CalculationMethod calculationMethod="GHG Protocol" />);
-        const component = screen.getByTestId('calculation-method-link');
+        const component = screen.getByTestId('co2-calculation-method-link');
         expect(component).toBeDefined();
         expect(component).toBeInTheDocument();
         expect(component).toHaveAttribute('href', LinkGHG);
