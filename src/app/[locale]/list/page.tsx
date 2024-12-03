@@ -1,10 +1,10 @@
 'use client'
 
 import { Box } from '@mui/material';
-import { AasListView } from 'app/[locale]/list/_components/AasListView';
+import { AasListViewDeprecated } from 'app/[locale]/list/_components-deprecated/AasListViewDeprecated';
 import ListHeader from 'components/basics/ListHeader';
 import { useEnv } from '../../env/provider';
-import { AasListViewDeprecated } from './_components-deprecated/AasListViewDeprecated';
+import AasListDataWrapper from './_components/AasListDataWrapper';
 
 export default function Page() {
     const env = useEnv();
@@ -17,8 +17,8 @@ export default function Page() {
     return (
         <Box display="flex" flexDirection="column" marginTop="20px" marginBottom="50px" width="100%">
             <Box width="90%" margin="auto">
-                <ListHeader namespace={'aasList'} keyValue={'header'} />
-                { env.AAS_LIST_V2_FEATURE_FLAG ? <AasListView/> : <AasListViewDeprecated/> }
+                <ListHeader namespace={'aasList'} keyValue={'header'}/>
+                {env.AAS_LIST_V2_FEATURE_FLAG ? <AasListDataWrapper/> : <AasListViewDeprecated/>}
             </Box>
         </Box>
     );

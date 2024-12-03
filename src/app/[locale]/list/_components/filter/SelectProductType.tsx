@@ -1,11 +1,11 @@
 ﻿import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { FormattedMessage, IntlShape, useIntl } from 'react-intl';
-import { messages } from 'lib/i18n/localization';
+import { messages } from '../../../../../lib/i18n/localization';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { ProductClass } from 'lib/util/ProductClassResolverUtil';
-import { GetProductClassIcon } from './GetProductClassIcon';
-import { tooltipText } from 'lib/util/ToolTipText';
-import { ListEntityDto } from 'lib/services/list-service/ListService';
+import { ProductClass } from '../../../../../lib/util/ProductClassResolverUtil';
+import { GetProductClassIcon } from '../GetProductClassIcon';
+import { tooltipText } from '../../../../../lib/util/ToolTipText';
+import { ListEntityDto } from '../../../../../lib/services/list-service/ListService';
 
 type SelectProductTypeProps = {
     aasList: ListEntityDto[] | undefined;

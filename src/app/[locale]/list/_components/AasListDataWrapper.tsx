@@ -7,28 +7,26 @@ import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
 import { CenteredLoadingSpinner } from 'components/basics/CenteredLoadingSpinner';
 import AasList from './AasList';
 import { useEnv } from 'app/env/provider';
-import { SelectProductType } from './SelectProductType';
+import { SelectProductType } from './filter/SelectProductType';
 import { AasListComparisonHeader } from './AasListComparisonHeader';
 import { Box } from '@mui/material';
+import { SelectRepository } from './filter/SelectRepository';
 
-type AasListProps = {
-    aasRepository: string | undefined;
-};
-
-export default function AasListDataWrapper(props: AasListProps) {
-    const { aasRepository } = props;
+export default function AasListDataWrapper() {
     const [isLoadingList, setIsLoadingList] = useState(false);
     const [aasList, setAasList] = useState<AasListDto>();
     const [, setAasListFiltered] = useState<ListEntityDto[]>();
     const [selectedAasList, setSelectedAasList] = useState<string[]>();
     const env = useEnv();
     const notificationSpawner = useNotificationSpawner();
+    const [selectedRepository, setSelectedRepository] = useState<string | undefined>();
+
     useAsyncEffect(async () => {
-        if (!aasRepository) return;
+        if (!selectedRepository) return;
 
         try {
             setIsLoadingList(true);
-            const list = await getAasListEntities(aasRepository!, 10);
+            const list = await getAasListEntities(selectedRepository!, 10);
             setAasList(list);
             setAasListFiltered(list.entities);
         } catch (e) {
@@ -36,7 +34,7 @@ export default function AasListDataWrapper(props: AasListProps) {
         } finally {
             setIsLoadingList(false);
         }
-    }, [aasRepository]);
+    }, [selectedRepository]);
 
 
     /**
@@ -61,24 +59,26 @@ export default function AasListDataWrapper(props: AasListProps) {
     };
 
     return (
-        <> {isLoadingList ? <CenteredLoadingSpinner sx={{ mt: 10 }} /> :
-            <>
-                <Box display="flex" justifyContent="space-between">
-                    <SelectProductType aasList={aasList?.entities} setAasListFiltered={setAasListFiltered} />
-                    {env.COMPARISON_FEATURE_FLAG && (
-                        <AasListComparisonHeader
-                            selectedAasList={selectedAasList}
-                            updateSelectedAasList={updateSelectedAasList}
-                        />
-                    )}
+        <>
+            <Box display="flex" justifyContent="space-between">
+                <Box display="flex" gap={4} marginBottom={2}>
+                    <SelectRepository onSelectedRepositoryChanged={setSelectedRepository}/>
+                    <SelectProductType aasList={aasList?.entities} setAasListFiltered={setAasListFiltered}/>
                 </Box>
+                {env.COMPARISON_FEATURE_FLAG && (
+                    <AasListComparisonHeader
+                        selectedAasList={selectedAasList}
+                        updateSelectedAasList={updateSelectedAasList}
+                    />
+                )}
+            </Box>
+            {isLoadingList ? <CenteredLoadingSpinner sx={{ mt: 10 }}/> :
                 <AasList
                     shells={aasList}
                     selectedAasList={selectedAasList}
                     updateSelectedAasList={updateSelectedAasList}
                     comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}>
-                </AasList>
-            </> }
+                </AasList>}
         </>
     );
 }

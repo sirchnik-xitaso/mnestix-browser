@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { useAsyncEffect } from 'lib/hooks/UseAsyncEffect';
-import { getConnectionDataByTypeAction } from 'lib/services/database/connectionServerActions';
-import { ConnectionTypeEnum, getTypeAction } from 'lib/services/database/ConnectionTypeEnum';
-import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
-import { useEnv } from 'app/env/provider';
+import { useAsyncEffect } from '../../../../../lib/hooks/UseAsyncEffect';
+import { getConnectionDataByTypeAction } from '../../../../../lib/services/database/connectionServerActions';
+import { ConnectionTypeEnum, getTypeAction } from '../../../../../lib/services/database/ConnectionTypeEnum';
+import { useNotificationSpawner } from '../../../../../lib/hooks/UseNotificationSpawner';
+import { useEnv } from '../../../../env/provider';
 
 export function SelectRepository(props: {
     onSelectedRepositoryChanged: Dispatch<SetStateAction<string | undefined>>;
@@ -40,14 +40,14 @@ export function SelectRepository(props: {
 
     return (
         <Box>
-            <FormControl variant="standard" sx={{ minWidth: 200, marginTop: '16px' }}>
+            <FormControl variant="standard" sx={{ minWidth: 200 }}>
                 <InputLabel id="aas-repository-select">AAS Repository</InputLabel>
                 <Select labelId="aas-repository-select"
                         variant="standard"
                         value={selectedRepository}
                         label='AAS Repository'
                         onChange={onRepositoryChanged}>
-                    { aasRepositories.map((repo, index) => {
+                    {aasRepositories.map((repo, index) => {
                         return <MenuItem key={index} value={repo}>{repo}</MenuItem>
                     })}
                 </Select>
