@@ -1,5 +1,6 @@
 import nextJest from 'next/jest';
 import { Config } from 'jest';
+import { TextDecoder, TextEncoder } from 'util';
 
 export {};
 const createJestConfig = nextJest({
@@ -11,6 +12,13 @@ const config: Config = {
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     testEnvironment: 'jsdom',
     modulePathIgnorePatterns: ['cypress'],
+    globals: {
+        'ts-jest': {
+            tsConfigFile: 'tsconfig.json',
+        },
+        TextEncoder: TextEncoder,
+        TextDecoder: TextDecoder,
+    },
     // mock all svg files
     moduleNameMapper: {
         '^.+\\.(svg)$': '<rootDir>/__mocks__/svg.tsx',
@@ -28,7 +36,7 @@ const jestConfigWithOverrides = async (...args) => {
     // Don't ignore specific node_modules during transformation. This is needed if a node_module doesn't return valid JavaScript files.
     res.transformIgnorePatterns = res.transformIgnorePatterns!.map((pattern) => {
         if (pattern === '/node_modules/') {
-            return '/node_modules/(?!flat|jose|ol|color-space|color-rgba|color-parse|color-name|quick-lru)';
+            return '/node_modules/(?!.+)';
         }
         return pattern;
     });
