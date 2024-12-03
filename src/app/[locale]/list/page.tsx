@@ -3,7 +3,7 @@
 import { Box } from '@mui/material';
 import { AasListViewDeprecated } from 'app/[locale]/list/_components-deprecated/AasListViewDeprecated';
 import ListHeader from 'components/basics/ListHeader';
-import { useEnv } from '../../env/provider';
+import { useEnv } from 'app/env/provider';
 import AasListDataWrapper from './_components/AasListDataWrapper';
 
 export default function Page() {

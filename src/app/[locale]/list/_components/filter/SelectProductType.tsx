@@ -1,11 +1,11 @@
 ﻿import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { FormattedMessage, IntlShape, useIntl } from 'react-intl';
-import { messages } from '../../../../../lib/i18n/localization';
+import { messages } from 'lib/i18n/localization';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { ProductClass } from '../../../../../lib/util/ProductClassResolverUtil';
+import { ProductClass } from 'lib/util/ProductClassResolverUtil';
 import { GetProductClassIcon } from '../GetProductClassIcon';
-import { tooltipText } from '../../../../../lib/util/ToolTipText';
-import { ListEntityDto } from '../../../../../lib/services/list-service/ListService';
+import { tooltipText } from 'lib/util/ToolTipText';
+import { ListEntityDto } from 'lib/services/list-service/ListService';
 
 type SelectProductTypeProps = {
     aasList: ListEntityDto[] | undefined;
@@ -24,15 +24,15 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
     useEffect(() => {
         const productClasses: ProductClass[] = [];
         if (aasList) {
-/*            aasList.forEach((aas) => {
-                if (!aas.productGroup) return;
-                const productClassId = getProductClassId(aas.productGroup);
-                const productClassString = translateProductClassId(productClassId, intl);
-                const productClass = parseProductClassFromString(productClassId, productClassString);
-                if (!productClasses.find((element) => element.id === productClass.id)) {
-                    productClasses.push(productClass);
-                }
-            });*/
+            /*            aasList.forEach((aas) => {
+                            if (!aas.productGroup) return;
+                            const productClassId = getProductClassId(aas.productGroup);
+                            const productClassString = translateProductClassId(productClassId, intl);
+                            const productClass = parseProductClassFromString(productClassId, productClassString);
+                            if (!productClasses.find((element) => element.id === productClass.id)) {
+                                productClasses.push(productClass);
+                            }
+                        });*/
         }
         setProductClass(productClasses);
     }, [aasList]);
@@ -56,11 +56,11 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
         if (event.target.value === '') {
             setAasListFiltered(aasList);
         } else {
-/*            const filteredList = aasList.filter((aas) => {
-                return aas.productGroup && aas.productGroup.startsWith(event.target.value);
-            });
-            setAasListFiltered(filteredList);
-            setfilteredAasListCount(filteredList.length); */
+            /*            const filteredList = aasList.filter((aas) => {
+                            return aas.productGroup && aas.productGroup.startsWith(event.target.value);
+                        });
+                        setAasListFiltered(filteredList);
+                        setfilteredAasListCount(filteredList.length); */
         }
     };
 
@@ -88,7 +88,7 @@ export const SelectProductType = (props: SelectProductTypeProps) => {
                                 data-testid={`product-class-select-${productType.description.replace(' ', '-')}`}
                             >
                                 <Typography display="flex" justifyItems="center">
-                                    <GetProductClassIcon productClassType={productType.type} />
+                                    <GetProductClassIcon productClassType={productType.type}/>
                                     <Box component="span" sx={{ marginLeft: '5px' }}>
                                         {tooltipText(productType.description, 25)}
                                     </Box>

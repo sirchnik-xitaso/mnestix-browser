@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { useAsyncEffect } from '../../../../../lib/hooks/UseAsyncEffect';
-import { getConnectionDataByTypeAction } from '../../../../../lib/services/database/connectionServerActions';
-import { ConnectionTypeEnum, getTypeAction } from '../../../../../lib/services/database/ConnectionTypeEnum';
-import { useNotificationSpawner } from '../../../../../lib/hooks/UseNotificationSpawner';
-import { useEnv } from '../../../../env/provider';
+import { useAsyncEffect } from 'lib/hooks/UseAsyncEffect';
+import { getConnectionDataByTypeAction } from 'lib/services/database/connectionServerActions';
+import { ConnectionTypeEnum, getTypeAction } from 'lib/services/database/ConnectionTypeEnum';
+import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
+import { useEnv } from 'app/env/provider';
 
 export function SelectRepository(props: {
     onSelectedRepositoryChanged: Dispatch<SetStateAction<string | undefined>>;
