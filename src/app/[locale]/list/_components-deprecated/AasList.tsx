@@ -9,37 +9,24 @@
     Typography,
     useTheme,
 } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { messages } from 'lib/i18n/localization';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { AasListTableRow } from 'app/[locale]/list/_components/AasListTableRow';
-import { AasListDto } from 'lib/services/list-service/ListService';
+import { AasListEntry } from 'lib/api/generated-api/clients.g';
+import { AasListTableRow } from 'app/[locale]/list/_components-deprecated/AasListTableRow';
 
 type AasListProps = {
-    shells: AasListDto | undefined;
+    shells: AasListEntry[];
+    tableHeaders: { label: string }[];
     comparisonFeatureFlag?: boolean;
     selectedAasList: string[] | undefined;
     updateSelectedAasList: (isChecked: boolean, aasId: string | undefined) => void;
 };
 
 export default function AasList(props: AasListProps) {
-    const { shells, selectedAasList, updateSelectedAasList, comparisonFeatureFlag } = props;
+    const { shells, tableHeaders, selectedAasList, updateSelectedAasList, comparisonFeatureFlag } = props;
     const theme = useTheme();
-    const intl = useIntl();
     const MAX_SELECTED_ITEMS = 3;
-
-    const tableHeaders = [
-        { label: intl.formatMessage(messages.mnestix.aasList.picture) },
-        { label: intl.formatMessage(messages.mnestix.aasList.manufacturerHeading) },
-        { label: intl.formatMessage(messages.mnestix.aasList.productDesignationHeading) },
-        {
-            label:
-                intl.formatMessage(messages.mnestix.aasList.assetIdHeading) +
-                ' / ' +
-                intl.formatMessage(messages.mnestix.aasList.aasIdHeading),
-        },
-        { label: intl.formatMessage(messages.mnestix.aasList.productClassHeading) },
-    ];
 
     /**
      * Decides if the current checkbox should be disabled or not.
@@ -50,7 +37,7 @@ export default function AasList(props: AasListProps) {
     };
 
     return (
-            <TableContainer>
+        <TableContainer>
             <Table>
                 <TableHead>
                     <TableRow
@@ -82,7 +69,7 @@ export default function AasList(props: AasListProps) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {shells && shells.entities?.map((aasListEntry) => (
+                    {shells?.map((aasListEntry) => (
                         <TableRow
                             key={aasListEntry.aasId}
                             sx={{
