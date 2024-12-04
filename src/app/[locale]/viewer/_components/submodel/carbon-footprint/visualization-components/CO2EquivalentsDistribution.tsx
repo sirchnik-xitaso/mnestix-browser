@@ -53,7 +53,7 @@ export function CO2EquivalentsDistribution(props: {
                     <ToggleButton value={chartVariants.barchart}>
                         <BarChartIcon />
                     </ToggleButton>
-                    <ToggleButton value={chartVariants.list}>
+                    <ToggleButton value={chartVariants.list} data-testid="list-toggle-button">
                         <ListIcon />
                     </ToggleButton>
                 </ToggleButtonGroup>
