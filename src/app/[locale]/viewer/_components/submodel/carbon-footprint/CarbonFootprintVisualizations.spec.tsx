@@ -45,7 +45,7 @@ describe('CarbonFootprintVisualizations Detail', () => {
 });
 
 function assertOnElements() {
-    const totalCo2Equivalents = screen.getByTestId('total-co2-equivalents-text');
+    const totalCo2Equivalents = screen.getByTestId('co2-equivalents');
     expect(totalCo2Equivalents).toBeDefined();
     expect(totalCo2Equivalents).toBeInTheDocument();
 
