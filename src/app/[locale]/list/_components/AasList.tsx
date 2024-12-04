@@ -9,11 +9,12 @@
     Typography,
     useTheme,
 } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { messages } from 'lib/i18n/localization';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { AasListTableRow } from 'app/[locale]/list/_components/AasListTableRow';
 import { AasListDto } from 'lib/services/list-service/ListService';
+import { useTranslations } from 'next-intl';
 
 type AasListProps = {
     shells: AasListDto | undefined;
@@ -23,27 +24,19 @@ type AasListProps = {
 };
 
 export default function AasList(props: AasListProps) {
-    const {
-        shells,
-        selectedAasList,
-        updateSelectedAasList,
-        comparisonFeatureFlag
-    } = props;
+    const { shells, selectedAasList, updateSelectedAasList, comparisonFeatureFlag } = props;
     const theme = useTheme();
-    const intl = useIntl();
+    const t = useTranslations('aas-list');
     const MAX_SELECTED_ITEMS = 3;
 
     const tableHeaders = [
-        { label: intl.formatMessage(messages.mnestix.aasList.picture) },
-        { label: intl.formatMessage(messages.mnestix.aasList.manufacturerHeading) },
-        { label: intl.formatMessage(messages.mnestix.aasList.productDesignationHeading) },
+        { label: t('picture') },
+        { label: t('manufacturerHeading') },
+        { label: t('productDesignationHeading') },
         {
-            label:
-                intl.formatMessage(messages.mnestix.aasList.assetIdHeading) +
-                ' / ' +
-                intl.formatMessage(messages.mnestix.aasList.aasIdHeading),
+            label: t('assetIdHeading') + ' / ' + t('aasIdHeading'),
         },
-        { label: intl.formatMessage(messages.mnestix.aasList.productClassHeading) },
+        { label: t('productClassHeading') },
     ];
 
     /**
@@ -54,7 +47,8 @@ export default function AasList(props: AasListProps) {
         return selectedAasList && selectedAasList.length >= MAX_SELECTED_ITEMS && !selectedAasList.includes(aasId);
     };
 
-    return (<>
+    return (
+        <>
             <TableContainer>
                 <Table>
                     <TableHead>
@@ -87,25 +81,26 @@ export default function AasList(props: AasListProps) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {shells && shells.entities?.map((aasListEntry) => (
-                            <TableRow
-                                key={aasListEntry.aasId}
-                                sx={{
-                                    '&:last-child td, &:last-child th': { border: 0 },
-                                    backgroundColor: theme.palette?.common?.white,
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                }}
-                                data-testid={`list-row-${aasListEntry.aasId}`}
-                            >
-                                <AasListTableRow
-                                    aasListEntry={aasListEntry}
-                                    comparisonFeatureFlag={comparisonFeatureFlag}
-                                    checkBoxDisabled={checkBoxDisabled}
-                                    selectedAasList={selectedAasList}
-                                    updateSelectedAasList={updateSelectedAasList}
-                                />
-                            </TableRow>
-                        ))}
+                        {shells &&
+                            shells.entities?.map((aasListEntry) => (
+                                <TableRow
+                                    key={aasListEntry.aasId}
+                                    sx={{
+                                        '&:last-child td, &:last-child th': { border: 0 },
+                                        backgroundColor: theme.palette?.common?.white,
+                                        '&:hover': { backgroundColor: theme.palette.action.hover },
+                                    }}
+                                    data-testid={`list-row-${aasListEntry.aasId}`}
+                                >
+                                    <AasListTableRow
+                                        aasListEntry={aasListEntry}
+                                        comparisonFeatureFlag={comparisonFeatureFlag}
+                                        checkBoxDisabled={checkBoxDisabled}
+                                        selectedAasList={selectedAasList}
+                                        updateSelectedAasList={updateSelectedAasList}
+                                    />
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>

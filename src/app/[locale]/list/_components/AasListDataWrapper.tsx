@@ -2,14 +2,14 @@ import { AasListDto, ListEntityDto } from 'lib/services/list-service/ListService
 import { useAsyncEffect } from 'lib/hooks/UseAsyncEffect';
 import { getAasListEntities } from 'lib/services/list-service/aasListApiActions';
 import { showError } from 'lib/util/ErrorHandlerUtil';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
 import { CenteredLoadingSpinner } from 'components/basics/CenteredLoadingSpinner';
 import AasList from './AasList';
 import { useEnv } from 'app/env/provider';
 import { SelectProductType } from './filter/SelectProductType';
 import { AasListComparisonHeader } from './AasListComparisonHeader';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { SelectRepository } from './filter/SelectRepository';
@@ -32,9 +32,8 @@ export default function AasListDataWrapper() {
 
     useAsyncEffect(async () => {
         await fetchListData();
+        resetPagination();
     }, [selectedRepository]);
-
-    // TODO Handle change of repo -> load first page.
 
     const fetchListData = async (newCursor?: string | undefined, isNext = true) => {
         if (!selectedRepository) return;
@@ -45,14 +44,10 @@ export default function AasListDataWrapper() {
         if (response.success) {
             setAasList(response);
             setAasListFiltered(response.entities);
-
             setCurrentCursor(response.cursor);
 
             if (isNext) {
                 setCursorHistory((prevHistory) => [...prevHistory, newCursor]);
-                setCurrentPage((prevPage) => prevPage + 1);
-            } else {
-                setCurrentPage((prevPage) => prevPage - 1);
             }
         } else {
             showError(response.error, notificationSpawner);
@@ -62,15 +57,22 @@ export default function AasListDataWrapper() {
 
     const handleNextPage = async () => {
         await fetchListData(currentCursor, true);
+        setCurrentPage((prevPage) => prevPage + 1);
     };
 
     /**
      * Handle a click on the back button.
-     * To load one page back, we need the cursor from two pages back.
+     * To load the page one step back, we need to use the cursor from two pages back.
      */
     const handleGoBack = async () => {
         const previousCursor = cursorHistory[currentPage - 2] ?? undefined;
         await fetchListData(previousCursor, false);
+        setCurrentPage((prevPage) => prevPage - 1);
+    };
+
+    const resetPagination = () => {
+        setCursorHistory([]);
+        setCurrentPage(0);
     };
 
     /**
@@ -122,7 +124,7 @@ export default function AasListDataWrapper() {
                         <IconButton onClick={handleGoBack} disabled={currentPage === 1}>
                             <ArrowBackIosIcon />
                         </IconButton>
-                        {t('page') + ': ' + currentPage}
+                        <Typography>{t('page') + ': ' + (currentPage + 1)}</Typography>
                         <IconButton onClick={handleNextPage} disabled={!currentCursor}>
                             <ArrowForwardIosIcon />
                         </IconButton>
