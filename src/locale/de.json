@@ -2,6 +2,7 @@
   "comment": "wir werden hier deutsche Übersetzungs-Keys haben",
   "aas-list": {
     "header": "AAS Liste",
+    "subHeader": "Lister aller Verwaltungsschalen im gewählten Repository.",
     "picture": "Bild",
     "manufacturerHeading": "Hersteller Name",
     "productDesignationHeading": "Hersteller Produktbezeichnung",

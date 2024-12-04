@@ -10,7 +10,7 @@ import { useEnv } from 'app/env/provider';
 import { SelectProductType } from './filter/SelectProductType';
 import { AasListComparisonHeader } from './AasListComparisonHeader';
 import { Box, IconButton, Typography } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { SelectRepository } from './filter/SelectRepository';
 import { useTranslations } from 'next-intl';
@@ -31,8 +31,8 @@ export default function AasListDataWrapper() {
     const [currentPage, setCurrentPage] = useState(0);
 
     useAsyncEffect(async () => {
-        await fetchListData();
         resetPagination();
+        await fetchListData();
     }, [selectedRepository]);
 
     const fetchListData = async (newCursor?: string | undefined, isNext = true) => {
@@ -98,8 +98,12 @@ export default function AasListDataWrapper() {
 
     return (
         <>
-            <Box display="flex" justifyContent="space-between">
-                <Box display="flex" gap={4} marginBottom={2}>
+            <Typography marginBottom={2} marginTop={-1}>
+                {t('subHeader')}
+            </Typography>
+
+            <Box display="flex" justifyContent="space-between" marginBottom={2}>
+                <Box display="flex" gap={4}>
                     <SelectRepository onSelectedRepositoryChanged={setSelectedRepository} />
                     <SelectProductType aasList={aasList?.entities} setAasListFiltered={setAasListFiltered} />
                 </Box>
@@ -121,10 +125,10 @@ export default function AasListDataWrapper() {
                         comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}
                     ></AasList>
                     <Box display="flex" justifyContent="flex-end" alignItems="center" gap={4} marginTop={2}>
-                        <IconButton onClick={handleGoBack} disabled={currentPage === 1}>
-                            <ArrowBackIosIcon />
+                        <IconButton onClick={handleGoBack} disabled={currentPage === 0}>
+                            <ArrowBackIosNewIcon />
                         </IconButton>
-                        <Typography>{t('page') + ': ' + (currentPage + 1)}</Typography>
+                        <Typography>{t('page') + ' ' + (currentPage + 1)}</Typography>
                         <IconButton onClick={handleNextPage} disabled={!currentCursor}>
                             <ArrowForwardIosIcon />
                         </IconButton>
