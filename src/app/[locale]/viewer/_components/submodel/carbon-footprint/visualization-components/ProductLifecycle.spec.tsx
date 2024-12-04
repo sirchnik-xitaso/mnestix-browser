@@ -1,7 +1,5 @@
-import { CustomRender } from 'test-utils/CustomRender';
 import { screen } from '@testing-library/react';
 import { expect } from '@jest/globals';
-import { ProductJourney } from './ProductJourney';
 import { ProductLifecycleStage } from 'lib/enums/ProductLifecycleStage.enum';
 import {
     ProductLifecycle
