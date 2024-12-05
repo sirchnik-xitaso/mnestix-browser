@@ -7,13 +7,12 @@ import * as connectionServerActions from 'lib/services/database/connectionServer
 jest.mock('./../../../../../lib/services/database/connectionServerActions');
 
 describe('SelectRepository', () => {
-    it('loads the repository values and fills the select', async () => {
+    it('Fires repository changed event when changing the select value', async () => {
         const mockDB = jest.fn(() => {
             return ['https://test-repository.de'];
         });
         const repositoryChanged = jest.fn();
-        // @ts-expect-error mockImplementation
-        connectionServerActions.getConnectionDataByTypeAction.mockImplementation(mockDB);
+        (connectionServerActions.getConnectionDataByTypeAction as jest.Mock).mockImplementation(mockDB);
         CustomRender(
             <SelectRepository
                 onSelectedRepositoryChanged={() => {

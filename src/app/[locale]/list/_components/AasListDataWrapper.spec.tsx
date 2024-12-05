@@ -4,7 +4,6 @@ import { expect } from '@jest/globals';
 import AasListDataWrapper from 'app/[locale]/list/_components/AasListDataWrapper';
 import * as serverActions from 'lib/services/list-service/aasListApiActions';
 import * as connectionServerActions from 'lib/services/database/connectionServerActions';
-import { act } from 'preact/test-utils';
 import { ListEntityDto } from 'lib/services/list-service/ListService';
 import { CurrentAasContextProvider } from 'components/contexts/CurrentAasContext';
 import { Internationalization } from 'lib/i18n/Internationalization';
@@ -22,7 +21,7 @@ jest.mock('next/navigation', () => ({
 const REPOSITORY_URL = 'https://test-repository.de';
 const FIRST_PAGE_CURSOR = '123123';
 
-function createTestListEntries(from = 0, to = 10): ListEntityDto[] {
+const createTestListEntries = (from = 0, to = 10): ListEntityDto[] => {
     const objects: ListEntityDto[] = [];
 
     for (let i = from; i < to; i++) {
@@ -36,27 +35,34 @@ function createTestListEntries(from = 0, to = 10): ListEntityDto[] {
     }
 
     return objects;
-}
+};
+
+const mockActionFirstPage = jest.fn(() => {
+    return {
+        success: true,
+        entities: createTestListEntries(0, 10),
+        cursor: FIRST_PAGE_CURSOR,
+        error: {},
+    };
+});
+
+const mockActionSecondPage = jest.fn(() => {
+    return {
+        success: true,
+        entities: createTestListEntries(10, 12),
+        cursor: undefined,
+        error: {},
+    };
+});
 
 describe('AASListDataWrapper Pagination', () => {
     beforeEach(async () => {
-        // Load List with 10 Elements:
-        const mockAction = jest.fn(() => {
-            return {
-                success: true,
-                entities: createTestListEntries(0, 10),
-                cursor: FIRST_PAGE_CURSOR,
-                error: {},
-            };
-        });
-        // @ts-expect-error Todo: find out how to use mockImplementation without error from typescript.
-        serverActions.getAasListEntities.mockImplementation(mockAction);
+        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionFirstPage);
 
         const mockDB = jest.fn(() => {
             return [REPOSITORY_URL];
         });
-        // @ts-expect-error mockImplementation
-        connectionServerActions.getConnectionDataByTypeAction.mockImplementation(mockDB);
+        (connectionServerActions.getConnectionDataByTypeAction as jest.Mock).mockImplementation(mockDB);
 
         CustomRender(
             <Internationalization>
@@ -83,20 +89,10 @@ describe('AASListDataWrapper Pagination', () => {
     });
 
     it('Loads the next page with the provided cursor', async () => {
-        const mockActionSecondPage = jest.fn(() => {
-            return {
-                success: true,
-                entities: createTestListEntries(10, 12),
-                cursor: undefined,
-                error: {},
-            };
-        });
-        // @ts-expect-error Todo: find out how to use mockImplementation without error from typescript.
-        serverActions.getAasListEntities.mockImplementation(mockActionSecondPage);
+        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
 
         const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
-        await act(() => nextButton.click());
-        await waitFor(() => expect(screen.getByRole('progressbar')).toBeNull);
+        await waitFor(async () => nextButton.click());
 
         expect(screen.getByText('assetId10', { exact: false })).toBeInTheDocument();
         expect(screen.getByText('Page 2', { exact: false })).toBeInTheDocument();
@@ -105,37 +101,16 @@ describe('AASListDataWrapper Pagination', () => {
     });
 
     it('Navigates one page back when clicking on the back button', async () => {
-        const mockActionSecondPage = jest.fn(() => {
-            return {
-                success: true,
-                entities: createTestListEntries(10, 12),
-                cursor: undefined,
-                error: {},
-            };
-        });
-        // @ts-expect-error Todo: find out how to use mockImplementation without error from typescript.
-        serverActions.getAasListEntities.mockImplementation(mockActionSecondPage);
+        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
 
         const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
-        await act(() => nextButton.click());
-        await waitFor(() => expect(screen.getByRole('progressbar')).toBeNull);
+        await waitFor(async () => nextButton.click());
 
-        const mockActionFirstPage = jest.fn(() => {
-            return {
-                success: true,
-                entities: createTestListEntries(0, 10),
-                cursor: FIRST_PAGE_CURSOR,
-                error: {},
-            };
-        });
-        // @ts-expect-error Todo: find out how to use mockImplementation without error from typescript.
-        serverActions.getAasListEntities.mockImplementation(mockActionFirstPage);
+        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionFirstPage);
 
         const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
-        await act(() => backButton.click());
-        await waitFor(() => expect(screen.getByRole('progressbar')).toBeNull);
+        await waitFor(async () => backButton.click());
 
-        screen.debug(undefined, 100000);
         expect(screen.getByText('assetId3', { exact: false })).toBeInTheDocument();
         expect(screen.getByText('Page 1', { exact: false })).toBeInTheDocument();
     });
