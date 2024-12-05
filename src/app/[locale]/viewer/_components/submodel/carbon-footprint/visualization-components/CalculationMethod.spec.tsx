@@ -9,7 +9,7 @@ import {
 describe('Calculation Method', () => {
     it('should use correct style', async () => {
         CustomRenderReactIntl(<CalculationMethod calculationMethod="Artificial Goon" />);
-        const component = screen.getByTestId('co2-calculation-method');
+        const component = screen.getByTestId('co2-calculation-method-text');
         expect(component).toBeDefined();
         expect(component).toBeInTheDocument();
         expect(component).toHaveStyle('color: rgb(25, 118, 210)');
@@ -19,7 +19,7 @@ describe('Calculation Method', () => {
 
     it('should display the method', async () => {
         CustomRenderReactIntl(<CalculationMethod calculationMethod="Artificial Goon" />);
-        const component = screen.getByTestId('co2-calculation-method');
+        const component = screen.getByTestId('co2-calculation-method-text');
         expect(component).toHaveTextContent('Artificial Goon');
     });
 
