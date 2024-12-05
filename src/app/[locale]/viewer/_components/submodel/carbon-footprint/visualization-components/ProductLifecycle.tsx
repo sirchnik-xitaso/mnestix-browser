@@ -27,6 +27,7 @@ export function ProductLifecycle(props: { completedStages: ProductLifecycleStage
             activeStep={props.completedStages.length}
             orientation="vertical"
             sx={{ '& .Muistel-root': { color: 'blue' } }}
+            data-testid="product-lifecycle-stepper"
         >
             {props.completedStages.map((step, index) => (
                 <Step key={index}>
