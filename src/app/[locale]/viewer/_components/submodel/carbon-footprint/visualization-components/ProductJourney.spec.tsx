@@ -41,7 +41,7 @@ describe('ProductJourney', () => {
     it('renders the ProductJourney', async () => {
 
         CustomRender(<ProductJourney addressesPerLifeCyclePhase={[firstAddress, secondAddress]} />);
-        const map = screen.getByTestId('test-map');
+        const map = screen.getByTestId('product-journey-box');
         expect(map).toBeDefined();
         expect(map).toBeInTheDocument();
 
@@ -56,7 +56,7 @@ describe('ProductJourney', () => {
 
         CustomRender(<ProductJourney addressesPerLifeCyclePhase={[firstAddress, secondAddress]} />);
 
-        const map = screen.getByTestId('test-map');
+        const map = screen.getByTestId('product-journey-box');
         expect(map).toBeDefined();
         expect(map).toBeInTheDocument();
 
