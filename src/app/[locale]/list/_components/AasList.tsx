@@ -17,6 +17,7 @@ import { AasListDto } from 'lib/services/list-service/ListService';
 import { useTranslations } from 'next-intl';
 
 type AasListProps = {
+    repositoryUrl: string;
     shells: AasListDto | undefined;
     comparisonFeatureFlag?: boolean;
     selectedAasList: string[] | undefined;
@@ -24,7 +25,7 @@ type AasListProps = {
 };
 
 export default function AasList(props: AasListProps) {
-    const { shells, selectedAasList, updateSelectedAasList, comparisonFeatureFlag } = props;
+    const { repositoryUrl, shells, selectedAasList, updateSelectedAasList, comparisonFeatureFlag } = props;
     const theme = useTheme();
     const t = useTranslations('aas-list');
     const MAX_SELECTED_ITEMS = 3;
@@ -93,6 +94,7 @@ export default function AasList(props: AasListProps) {
                                     data-testid={`list-row-${aasListEntry.aasId}`}
                                 >
                                     <AasListTableRow
+                                        repositoryUrl={repositoryUrl}
                                         aasListEntry={aasListEntry}
                                         comparisonFeatureFlag={comparisonFeatureFlag}
                                         checkBoxDisabled={checkBoxDisabled}
