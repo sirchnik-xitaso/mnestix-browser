@@ -17,6 +17,7 @@ jest.mock('next/navigation', () => ({
         };
     },
 }));
+jest.mock('next-auth', jest.fn());
 
 const REPOSITORY_URL = 'https://test-repository.de';
 const FIRST_PAGE_CURSOR = '123123';
