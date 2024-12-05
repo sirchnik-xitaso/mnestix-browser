@@ -55,7 +55,7 @@ const mockActionSecondPage = jest.fn(() => {
     };
 });
 
-describe('AASListDataWrapper Pagination', () => {
+describe('AASListDataWrapper', () => {
     beforeEach(async () => {
         (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionFirstPage);
 
@@ -89,8 +89,8 @@ describe('AASListDataWrapper Pagination', () => {
     });
 
     it('Loads the next page with the provided cursor', async () => {
+        // go to second page
         (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
-
         const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
         await waitFor(async () => nextButton.click());
 
@@ -101,13 +101,13 @@ describe('AASListDataWrapper Pagination', () => {
     });
 
     it('Navigates one page back when clicking on the back button', async () => {
+        // go to second page
         (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
-
         const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
         await waitFor(async () => nextButton.click());
 
+        // back to first page
         (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionFirstPage);
-
         const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
         await waitFor(async () => backButton.click());
 
