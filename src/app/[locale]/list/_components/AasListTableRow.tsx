@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { mapFileDtoToBlob } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { useEnv } from 'app/env/provider';
 import { ListEntityDto } from 'lib/services/list-service/ListService';
+import { useTranslations } from 'next-intl';
 
 type AasTableRowProps = {
     aasListEntry: ListEntityDto;
@@ -39,17 +40,19 @@ export const AasListTableRow = (props: AasTableRowProps) => {
     const [, setAasOriginUrl] = useAasOriginSourceState();
     const notificationSpawner = useNotificationSpawner();
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
+    const env = useEnv();
+    const t = useTranslations('aas-list');
+
     const navigateToAas = (listEntry: ListEntityDto) => {
         setAas(null);
         setAasOriginUrl(null);
         if (listEntry.aasId) navigate.push(`/viewer/${encodeBase64(listEntry.aasId)}`);
     };
-    const env = useEnv();
 
-/*    const translateListText = (property: { [key: string]: string } | undefined) => {
-        if (!property) return '';
-        return property[intl.locale] ?? Object.values(property)[0] ?? '';
-    };*/
+    /*    const translateListText = (property: { [key: string]: string } | undefined) => {
+            if (!property) return '';
+            return property[intl.locale] ?? Object.values(property)[0] ?? '';
+        };*/
 
     useAsyncEffect(async () => {
         if (isValidUrl(aasListEntry.thumbnail ?? '')) {
@@ -106,16 +109,16 @@ export const AasListTableRow = (props: AasTableRowProps) => {
             </TableCell>
             <TableCell align="left" sx={tableBodyText}>
                 <Typography fontWeight="bold" sx={{ letterSpacing: '0.16px' }}>
-                    <FormattedMessage {...messages.mnestix.aasList.assetIdHeading} />
+                    {t('assetIdHeading')}
                 </Typography>
                 {tooltipText(aasListEntry.assetId, 80)} <br />
                 <Typography fontWeight="bold" sx={{ letterSpacing: '0.16px' }}>
-                    <FormattedMessage {...messages.mnestix.aasList.aasIdHeading} />
+                    {t('aasIdHeading')}
                 </Typography>
                 {tooltipText(aasListEntry.aasId, 80)}
             </TableCell>
             <TableCell align="left">
-              {/*  {aasListEntry.productGroup ? (
+                {/*  {aasListEntry.productGroup ? (
                     <ProductClassChip productClassId={getProductClassId(aasListEntry.productGroup)} maxChars={25} />
                 ) : (
                     <Chip

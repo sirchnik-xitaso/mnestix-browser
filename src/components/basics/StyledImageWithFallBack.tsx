@@ -1,6 +1,6 @@
 ﻿import { Box, Skeleton, styled } from '@mui/material';
 import { useState } from 'react';
-import DefaultThumbnail from '../../assets/AasDefaultThumbnail.svg';
+import DefaultThumbnail from 'assets/AasDefaultThumbnail.svg';
 
 interface StyledImageProps {
     size: number;
