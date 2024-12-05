@@ -27,13 +27,14 @@ export function SelectRepository(props: { onSelectedRepositoryChanged: Dispatch<
                 props.onSelectedRepositoryChanged(env.AAS_REPO_API_URL);
             }
             setAasRepositories(aasRepositories);
-            setIsLoading(false);
         } catch (error) {
             notificationSpawner.spawn({
                 message: error,
                 severity: 'error',
             });
             return;
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 
