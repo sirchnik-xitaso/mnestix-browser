@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import enMessages from 'locale/en.json';
 import deMessages from 'locale/de.json';
 import { NotificationContextProvider } from 'components/contexts/NotificationContext';
-import { Internationalization } from 'lib/i18n/Internationalization';
 
 interface WrapperProps {
     children: ReactNode;
@@ -30,9 +29,7 @@ export const CustomRender = (ui: ReactNode, { locale = 'en', ...renderOptions } 
     const messages = loadMessages(locale);
     const Wrapper: React.FC<WrapperProps> = ({ children }) => (
         <NextIntlClientProvider locale={locale} messages={messages}>
-            <Internationalization>
-                <NotificationContextProvider>{children}</NotificationContextProvider>
-            </Internationalization>
+            <NotificationContextProvider>{children}</NotificationContextProvider>
         </NextIntlClientProvider>
     );
 
