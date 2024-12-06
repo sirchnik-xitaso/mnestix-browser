@@ -120,7 +120,8 @@ export default function AasListDataWrapper() {
                 <>
                     {selectedRepository ? (
                         <>
-                            <AasList // handle no default repository
+                            <AasList
+                                data-testid="aas-list"
                                 repositoryUrl={selectedRepository}
                                 shells={aasList}
                                 selectedAasList={selectedAasList}
@@ -147,7 +148,7 @@ export default function AasListDataWrapper() {
                         </>
                     ) : (
                         <Box>
-                            <Typography>{t('select-repository')}</Typography>
+                            <Typography data-testid="select-repository-text">{t('select-repository')}</Typography>
                         </Box>
                     )}
                 </>
