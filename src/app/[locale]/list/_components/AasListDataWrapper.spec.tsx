@@ -96,7 +96,7 @@ describe('AASListDataWrapper', () => {
             await waitFor(() => screen.getByTestId('list-next-button'));
         });
 
-        it('Disables the back button on the first page', async () => {
+        it('Should disable the back button on the first page', async () => {
             const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
             expect(screen.getByText('assetId1', { exact: false })).toBeInTheDocument();
             expect(backButton).toBeDisabled();
