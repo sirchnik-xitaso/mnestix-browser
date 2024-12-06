@@ -61,8 +61,12 @@ export const AasListTableRow = (props: AasTableRowProps) => {
         };*/
 
     useAsyncEffect(async () => {
-        if (isValidUrl(aasListEntry.thumbnail ?? '')) {
-            setThumbnailUrl(aasListEntry.thumbnail ?? '');
+        if (!aasListEntry.thumbnail) {
+            return;
+        }
+
+        if (isValidUrl(aasListEntry.thumbnail)) {
+            setThumbnailUrl(aasListEntry.thumbnail);
         } else if (aasListEntry.aasId && repositoryUrl) {
             const response = await getThumbnailFromShell(aasListEntry.aasId, repositoryUrl);
             if (response.isSuccess) {
