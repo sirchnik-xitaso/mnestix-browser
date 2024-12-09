@@ -11,6 +11,7 @@ import { MenuListItem, MenuListItemProps } from './MenuListItem';
 import ListIcon from '@mui/icons-material/List';
 import packageJson from '../../../package.json';
 import { useEnv } from 'app/env/provider';
+import { ExternalLink } from 'layout/menu/ExternalLink';
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
     '.MuiDrawer-paper': {
@@ -58,7 +59,18 @@ export default function MainMenu() {
     const auth = useAuth();
     const env = useEnv();
     const useAuthentication = env.AUTHENTICATION_FEATURE_FLAG;
+    const copyrightString = `Copyright © ${new Date().getFullYear()} XITASO GmbH`;
     const versionString = 'Version ' + packageJson.version;
+    const imprintString = env.IMPRINT_URL;
+    const dataPrivacyString = env.DATA_PRIVACY_URL;
+
+    const getAuthName = () => {
+        const user = auth?.getAccount()?.user;
+        if (!user) return;
+        if (user.email) return user.email;
+        if (user.name) return user.name;
+        return;
+    };
 
     const handleMenuInteraction = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (
@@ -150,7 +162,7 @@ export default function MainMenu() {
                         <MenuHeading>
                             <FormattedMessage {...messages.mnestix.repository} />
                         </MenuHeading>
-                        {(!useAuthentication || auth.isLoggedIn) ? (
+                        {!useAuthentication || auth.isLoggedIn ? (
                             <>
                                 {adminMainMenu.map((props, i) => (
                                     <MenuListItem {...props} key={'adminMainMenu' + i} />
@@ -171,40 +183,43 @@ export default function MainMenu() {
                             </>
                         )}
                     </List>
-
                 </Box>
-                <Typography
-                    className="bottom-menu"
-                    align="left"
-                    paddingLeft="16px"
-                    paddingBottom="10px"
-                    style={{ opacity: '0.6' }}
-                >
-                    {`Copyright © ${new Date().getFullYear()} XITASO GmbH`}
-                </Typography>
-                <List>
-                    <Typography align="left" paddingLeft="16px" paddingBottom="10px" style={{ opacity: '0.6' }}>
-                        {versionString}
-                    </Typography>
-                    {useAuthentication && <StyledDivider />}
-                    {useAuthentication && auth.isLoggedIn && (
-                        <>
-                            {auth.getAccount()?.user?.email && (
-                                <MenuHeading>{auth.getAccount()?.user?.email}</MenuHeading>
+                <Box sx={{ mt: 'auto', mb: 0, p: '16px', opacity: 0.6 }}>
+                    {imprintString && (
+                        <Typography>
+                            <ExternalLink href={imprintString} descriptor={messages.mnestix.imprint} />
+                        </Typography>
+                    )}
+                    {dataPrivacyString && (
+                        <Typography paddingBottom="20px">
+                            <ExternalLink href={dataPrivacyString} descriptor={messages.mnestix.dataPrivacy} />
+                        </Typography>
+                    )}
+                    <Typography paddingBottom="12px">{copyrightString}</Typography>
+                    <Typography>{versionString}</Typography>
+                </Box>
+                {useAuthentication && (
+                    <>
+                        <StyledDivider />
+                        <List>
+                            {auth.isLoggedIn && (
+                                <>
+                                    {getAuthName() && <MenuHeading marginTop={0}>{getAuthName()}</MenuHeading>}
+                                    {adminBottomMenu.map((props, i) => (
+                                        <MenuListItem {...props} key={'adminBottomMenu' + i} />
+                                    ))}
+                                </>
                             )}
-                            {adminBottomMenu.map((props, i) => (
-                                <MenuListItem {...props} key={'adminBottomMenu' + i} />
-                            ))}
-                        </>
-                    )}
-                    {useAuthentication && !auth.isLoggedIn && (
-                        <>
-                            {guestBottomMenu.map((props, i) => (
-                                <MenuListItem {...props} key={'guestBottomMenu' + i} />
-                            ))}
-                        </>
-                    )}
-                </List>
+                            {!auth.isLoggedIn && (
+                                <>
+                                    {guestBottomMenu.map((props, i) => (
+                                        <MenuListItem {...props} key={'guestBottomMenu' + i} />
+                                    ))}
+                                </>
+                            )}
+                        </List>
+                    </>
+                )}
             </StyledDrawer>
         </>
     );
