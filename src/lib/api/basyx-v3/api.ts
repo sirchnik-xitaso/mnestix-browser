@@ -11,7 +11,7 @@ import {
 import { ApiResponseWrapper } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
 import { mnestixFetch } from 'lib/api/infrastructure';
-import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
+import ServiceReachable from 'test-utils/TestUtils';
 
 export type FetchAPI = {
     fetch: <T>(url: RequestInfo, init?: RequestInit) => Promise<ApiResponseWrapper<T>>;

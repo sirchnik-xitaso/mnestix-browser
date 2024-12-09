@@ -8,9 +8,9 @@ import {
     wrapSuccess,
 } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
-import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
-import { encodeBase64, safeBase64Decode } from 'lib/util/Base64Util';
 import { AasRepositoryResponse } from 'lib/api/basyx-v3/api';
+import { encodeBase64, safeBase64Decode } from 'lib/util/Base64Util';
+import ServiceReachable from 'test-utils/TestUtils';
 
 const options = {
     headers: { 'Content-type': 'application/json; charset=utf-8' },
