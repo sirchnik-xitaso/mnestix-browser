@@ -27,8 +27,7 @@ implementation of standardized digital twins. It opens the way for use cases suc
 You can find a demo [here](https://mnestix-prod.azurewebsites.net/).
 Some screenshots can be found in the [screenshots folder](screenshots).
 
-### **If you need support feel free to contact us through our
-website [here](https://xitaso.com/kompetenzen/mnestix/#support).**
+### **If you need support feel free to contact us through our website [here](https://xitaso.com/kompetenzen/mnestix/#support).**
 
 ## Quickstart
 
