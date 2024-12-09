@@ -24,11 +24,14 @@ services:
       SUBMODEL_REPO_API_URL: 'http://mnestix-api:5064/repo'
       MNESTIX_BACKEND_API_URL: 'http://mnestix-api:5064'
       AAS_LIST_FEATURE_FLAG: "true"
+      AAS_LIST_V2_FEATURE_FLAG: "false"
       TRANSFER_FEATURE_FLAG: "false"
       COMPARISON_FEATURE_FLAG: "true"
       AUTHENTICATION_FEATURE_FLAG: "false"
       LOCK_TIMESERIES_PERIOD_FEATURE_FLAG: "true"
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-verySecureNextAuthSecret}
+      IMPRINT_URL: ""
+      DATA_PRIVACY_URL: ""
     depends_on:
       aas-environment:
         condition: service_healthy # only after the healthcheck in aas is successful, the mnestix container is being created
@@ -38,7 +41,7 @@ services:
       - mnestix-database:/app/prisma/database
 
   mnestix-api:
-    image: mnestix/mnestix-api:1.2.3
+    image: mnestix/mnestix-api:1.2.4
     container_name: mnestix-api
     profiles: [ "", "backend", "tests" ]
     ports:
