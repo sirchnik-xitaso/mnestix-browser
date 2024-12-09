@@ -10,6 +10,9 @@ import { Internationalization } from 'lib/i18n/Internationalization';
 
 jest.mock('./../../../../lib/services/list-service/aasListApiActions');
 jest.mock('./../../../../lib/services/database/connectionServerActions');
+jest.mock('./../../../../lib/services/repository-access/repositorySearchActions', () => ({
+    getThumbnailFromShell: jest.fn(() => Promise.resolve({ success: true, result: { fileType: '', fileContent: '' } })),
+}));
 jest.mock('next/navigation', () => ({
     useRouter() {
         return {
@@ -73,46 +76,57 @@ describe('AASListDataWrapper', () => {
             </Internationalization>,
         );
 
-        // Choose a repository
         await waitFor(() => screen.getByTestId('repository-select'));
-        const select = screen.getAllByRole('combobox')[0];
-        fireEvent.mouseDown(select);
-        const firstElement = screen.getAllByRole('option')[0];
-        fireEvent.click(firstElement);
-
-        await waitFor(() => screen.getByTestId('list-next-button'));
     });
 
-    it('Disables the back button on the first page', async () => {
-        const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
-        expect(screen.getByText('assetId1', { exact: false })).toBeInTheDocument();
-        expect(backButton).toBeDisabled();
+    it('Shows the info text if no repository is selected.', async () => {
+        expect(screen.queryByTestId('aas-list')).toBeNull();
+        expect(screen.getByTestId('select-repository-text')).toBeInTheDocument();
     });
 
-    it('Loads the next page with the provided cursor', async () => {
-        // go to second page
-        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
-        const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
-        await waitFor(async () => nextButton.click());
+    describe('Pagination', () => {
+        beforeEach(async () => {
+            // Choose a repository
+            await waitFor(() => screen.getByTestId('repository-select'));
+            const select = screen.getAllByRole('combobox')[0];
+            fireEvent.mouseDown(select);
+            const firstElement = screen.getAllByRole('option')[0];
+            fireEvent.click(firstElement);
 
-        expect(screen.getByText('assetId10', { exact: false })).toBeInTheDocument();
-        expect(screen.getByText('Page 2', { exact: false })).toBeInTheDocument();
-        expect(screen.getByTestId('list-next-button')).toBeDisabled();
-        expect(mockActionSecondPage).toBeCalledWith(REPOSITORY_URL, 10, FIRST_PAGE_CURSOR);
-    });
+            await waitFor(() => screen.getByTestId('list-next-button'));
+        });
 
-    it('Navigates one page back when clicking on the back button', async () => {
-        // go to second page
-        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
-        const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
-        await waitFor(async () => nextButton.click());
+        it('Should disable the back button on the first page', async () => {
+            const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
+            expect(screen.getByText('assetId1', { exact: false })).toBeInTheDocument();
+            expect(backButton).toBeDisabled();
+        });
 
-        // back to first page
-        (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionFirstPage);
-        const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
-        await waitFor(async () => backButton.click());
+        it('Loads the next page with the provided cursor', async () => {
+            // go to second page
+            (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
+            const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
+            await waitFor(async () => nextButton.click());
 
-        expect(screen.getByText('assetId3', { exact: false })).toBeInTheDocument();
-        expect(screen.getByText('Page 1', { exact: false })).toBeInTheDocument();
+            expect(screen.getByText('assetId10', { exact: false })).toBeInTheDocument();
+            expect(screen.getByText('Page 2', { exact: false })).toBeInTheDocument();
+            expect(screen.getByTestId('list-next-button')).toBeDisabled();
+            expect(mockActionSecondPage).toBeCalledWith(REPOSITORY_URL, 10, FIRST_PAGE_CURSOR);
+        });
+
+        it('Navigates one page back when clicking on the back button', async () => {
+            // go to second page
+            (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionSecondPage);
+            const nextButton = await waitFor(() => screen.getByTestId('list-next-button'));
+            await waitFor(async () => nextButton.click());
+
+            // back to first page
+            (serverActions.getAasListEntities as jest.Mock).mockImplementation(mockActionFirstPage);
+            const backButton = await waitFor(() => screen.getByTestId('list-back-button'));
+            await waitFor(async () => backButton.click());
+
+            expect(screen.getByText('assetId3', { exact: false })).toBeInTheDocument();
+            expect(screen.getByText('Page 1', { exact: false })).toBeInTheDocument();
+        });
     });
 });

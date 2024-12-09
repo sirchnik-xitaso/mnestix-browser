@@ -15,11 +15,11 @@ import { getThumbnailFromShell } from 'lib/services/repository-access/repository
 import { isValidUrl } from 'lib/util/UrlUtil';
 import { useState } from 'react';
 import { mapFileDtoToBlob } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
-import { useEnv } from 'app/env/provider';
 import { ListEntityDto } from 'lib/services/list-service/ListService';
 import { useTranslations } from 'next-intl';
 
 type AasTableRowProps = {
+    repositoryUrl: string;
     aasListEntry: ListEntityDto;
     comparisonFeatureFlag: boolean | undefined;
     checkBoxDisabled: (aasId: string | undefined) => boolean | undefined;
@@ -33,14 +33,20 @@ const tableBodyText = {
     color: 'text.primary',
 };
 export const AasListTableRow = (props: AasTableRowProps) => {
-    const { aasListEntry, comparisonFeatureFlag, checkBoxDisabled, selectedAasList, updateSelectedAasList } = props;
+    const {
+        repositoryUrl,
+        aasListEntry,
+        comparisonFeatureFlag,
+        checkBoxDisabled,
+        selectedAasList,
+        updateSelectedAasList,
+    } = props;
     const navigate = useRouter();
     const intl = useIntl();
     const [, setAas] = useAasState();
     const [, setAasOriginUrl] = useAasOriginSourceState();
     const notificationSpawner = useNotificationSpawner();
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
-    const env = useEnv();
     const t = useTranslations('aas-list');
 
     const navigateToAas = (listEntry: ListEntityDto) => {
@@ -55,10 +61,14 @@ export const AasListTableRow = (props: AasTableRowProps) => {
         };*/
 
     useAsyncEffect(async () => {
-        if (isValidUrl(aasListEntry.thumbnail ?? '')) {
-            setThumbnailUrl(aasListEntry.thumbnail ?? '');
-        } else if (aasListEntry.aasId && env.AAS_REPO_API_URL) {
-            const response = await getThumbnailFromShell(aasListEntry.aasId, env.AAS_REPO_API_URL);
+        if (!aasListEntry.thumbnail) {
+            return;
+        }
+
+        if (isValidUrl(aasListEntry.thumbnail)) {
+            setThumbnailUrl(aasListEntry.thumbnail);
+        } else if (aasListEntry.aasId && repositoryUrl) {
+            const response = await getThumbnailFromShell(aasListEntry.aasId, repositoryUrl);
             if (response.isSuccess) {
                 const blob = mapFileDtoToBlob(response.result);
                 const blobUrl = URL.createObjectURL(blob);

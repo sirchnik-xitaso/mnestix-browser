@@ -10,7 +10,8 @@
     "aasIdHeading": "AAS ID",
     "productClassHeading": "Product Class",
     "page": "Page",
-    "repository-dropdown": "AAS Repository"
+    "repository-dropdown": "AAS Repository",
+    "select-repository": "Please select a repository"
   },
   "dashboard": {
     "welcome-text": "Welcome to Mnestix",
