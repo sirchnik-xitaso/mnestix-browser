@@ -2,7 +2,7 @@ import { expect } from '@jest/globals';
 import { AasListDto, ListService } from 'lib/services/list-service/ListService';
 import testData from 'lib/services/list-service/ListService.data.json';
 import { AssetAdministrationShell } from '@aas-core-works/aas-core3.0-typescript/types';
-import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
+import ServiceReachable from 'test-utils/TestUtils';
 
 const assetAdministrationShells = testData.assetAdministrationShells as unknown as AssetAdministrationShell[];
 const expectedData = testData.expectedResult as AasListDto;
