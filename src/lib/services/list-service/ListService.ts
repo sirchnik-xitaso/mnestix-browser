@@ -2,7 +2,7 @@ import { IAssetAdministrationShellRepositoryApi } from 'lib/api/basyx-v3/apiInte
 import { AssetAdministrationShellRepositoryApi } from 'lib/api/basyx-v3/api';
 import { mnestixFetch } from 'lib/api/infrastructure';
 import { AssetAdministrationShell } from '@aas-core-works/aas-core3.0-typescript/types';
-import { ServiceReachable } from 'lib/services/transfer-service/TransferService';
+import ServiceReachable from 'test-utils/TestUtils';
 
 export type ListEntityDto = {
     aasId: string;
