@@ -281,6 +281,7 @@ Mnestix provides the following configuration options. You can adapt the values i
 | `SUBMODEL_REPO_API_URL`               |                             | Default Submodel Repository to display when Submodel Id is not in Submodel Registry                                                                                                                                                | required |
 | `MNESTIX_BACKEND_API_URL`             |                             | Mnestix Backend with a lot of business comfort features like the Repository-Proxy or the Template builder                                                                                                                          | optional |
 | `AAS_LIST_FEATURE_FLAG`               | false                       | Enables or disables the AasList in the frontend. This only works in combination with `Features__AllowRetrievingAllShellsAndSubmodels` being set to `true` (Needs the Mnestix Backend to work)                                      | optional |
+| `AAS_LIST_V2_FEATURE_FLAG`            | false                       | The functionality controlled by this flag is under active development and may change without notice. Please see [details](#aas-list-v2-feature-details)                                                                            | optional |
 | `TRANSFER_FEATURE_FLAG`               | false                       | Enables or disables the Transfer Feature in the frontend. If enabled, it is possible to import a viewed AAS to a configured repository. This feature is currently being developed.                                                 | optional |
 | `AUTHENTICATION_FEATURE_FLAG`         | false                       | Enable or disable the authentication in the frontend. (Needs the Mnestix Backend to work)                                                                                                                                          | optional |
 | `COMPARISON_FEATURE_FLAG`             | false                       | Enables or disables the comparison feature.                                                                                                                                                                                        | optional |
@@ -550,6 +551,18 @@ backend environment variable `Features__AllowRetrievingAllShellsAndSubmodels: fa
 Remember that this also means that the functionality to list all AAS won't work anymore in the Mnestix Browser, so
 disable this functionality with the environment variable `AAS_LIST_FEATURE_FLAG: false`.
 
+#### AAS List V2 Feature Details
+
+The `AAS_LIST_V2_FEATURE_FLAG` is a feature flag introduced as part of a preview release.
+It enables access to an updated list implementation that operates independently of the Mnestix API.
+
+This flag is currently disabled by default (false) and is available only in preview.
+It is not yet recommended for production environments.
+
+To enable the feature for testing or preview purposes, set the flag to true in your configuration.
+
+#### AzureAD Service
+
 One can also add an AzureAD Service to give people deeper access, this enables the "Login" Button in the Mnestix
 Browser.
 After logging in, users have access to even more functionality.
@@ -714,7 +727,7 @@ Right now, we are building a community around Mnestix.
 If you are looking for a way to support us, you can start contributing to Mnestix right away.
 For this purpose, issues which are particularly suitable for a first contribution are labeled with the tag
 `good first issue`.  
-If this is your first time contributing to a eclipse project, we recommend having a look at this
+If this is your first time contributing to an eclipse project, we recommend having a look at this
 guide: [Contributing to a Eclipse project](https://www.eclipse.org/contribute/).  
-We would be more than happy to have you onboard. If there is anything you want to know, feel free to contact
+We would be more than happy to have you on board. If there is anything you want to know, feel free to contact
 us [mnestix@xitaso.com](mailto:mnestix@xitaso.com) or through our website [here](https://xitaso.com/kompetenzen/mnestix/#support).   

@@ -33,6 +33,11 @@ export class RequiredError extends Error {
     }
 }
 
+export type AasRepositoryResponse = {
+    paging_metadata: { cursor: string };
+    result: AssetAdministrationShell[];
+};
+
 /**
  * AssetAdministrationShellRepositoryApi - object-oriented interface
  * @class AssetAdministrationShellRepositoryApi
@@ -64,6 +69,14 @@ export class AssetAdministrationShellRepositoryApi implements IAssetAdministrati
 
     getBaseUrl(): string {
         return this.basePath;
+    }
+
+    async getAllAssetAdministrationShells(limit?: number, cursor?: string, options?: any) {
+        return AssetAdministrationShellRepositoryApiFp(this.configuration).getAllAssetAdministrationShells(
+            limit,
+            cursor,
+            options,
+        )(this.http, this.basePath);
     }
 
     async getAssetAdministrationShellById(aasId: string, options?: any) {
@@ -117,6 +130,24 @@ export class AssetAdministrationShellRepositoryApi implements IAssetAdministrati
  */
 export const AssetAdministrationShellRepositoryApiFp = function (configuration?: Configuration) {
     return {
+        getAllAssetAdministrationShells(limit: number | undefined, cursor: string | undefined, options: any) {
+            return async (requestHandler: FetchAPI, basePath: string) => {
+                const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+                const localVarHeaderParameter = {
+                    Accept: 'application/json',
+                } as any;
+
+                const cursorQueryParameter = cursor ?? '';
+
+                localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options?.headers);
+
+                return await requestHandler.fetch<AasRepositoryResponse>(
+                    basePath + `/shells?limit=${limit}&cursor=${cursorQueryParameter}`,
+                    localVarRequestOptions,
+                );
+            };
+        },
+
         /**
          * @summary Retrieves a specific Asset Administration Shell from the Asset Administration Shell repository
          * @param {string} aasId The Asset Administration Shell&#x27;s unique id

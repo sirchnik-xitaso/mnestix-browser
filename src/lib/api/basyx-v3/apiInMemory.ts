@@ -8,6 +8,7 @@ import {
     wrapSuccess,
 } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
+import { AasRepositoryResponse } from 'lib/api/basyx-v3/api';
 import { encodeBase64, safeBase64Decode } from 'lib/util/Base64Util';
 import ServiceReachable from 'test-utils/TestUtils';
 
@@ -29,6 +30,29 @@ export class AssetAdministrationShellRepositoryApiInMemory implements IAssetAdmi
 
     getBaseUrl(): string {
         return this.baseUrl;
+    }
+
+    async getAllAssetAdministrationShells(
+        _limit?: number | undefined,
+        _cursor?: string | undefined,
+        _options?: object | undefined,
+    ): Promise<ApiResponseWrapper<AasRepositoryResponse>> {
+        if (this.reachable !== ServiceReachable.Yes)
+            return wrapErrorCode(ApiResultStatus.UNKNOWN_ERROR, 'Service not reachable');
+
+        const shells = this.shellsInRepository;
+        let cursor = '';
+        if (shells.size > 0) {
+            cursor = [...shells].pop()?.[0] ?? '';
+        }
+        const response = new Response(
+            JSON.stringify({
+                paging_metadata: { cursor: cursor },
+                result: Array.from(shells.values()),
+            }),
+            options,
+        );
+        return await wrapResponse(response);
     }
 
     async postAssetAdministrationShell(
