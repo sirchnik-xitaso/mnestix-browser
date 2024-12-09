@@ -118,21 +118,39 @@ export default function AasListDataWrapper() {
                 <CenteredLoadingSpinner sx={{ mt: 10 }} />
             ) : (
                 <>
-                    <AasList
-                        shells={aasList}
-                        selectedAasList={selectedAasList}
-                        updateSelectedAasList={updateSelectedAasList}
-                        comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}
-                    ></AasList>
-                    <Box display="flex" justifyContent="flex-end" alignItems="center" gap={4} marginTop={2}>
-                        <IconButton onClick={handleGoBack} disabled={currentPage === 0}>
-                            <ArrowBackIosNewIcon />
-                        </IconButton>
-                        <Typography>{t('page') + ' ' + (currentPage + 1)}</Typography>
-                        <IconButton onClick={handleNextPage} disabled={!currentCursor}>
-                            <ArrowForwardIosIcon />
-                        </IconButton>
-                    </Box>
+                    {selectedRepository ? (
+                        <>
+                            <AasList
+                                data-testid="aas-list"
+                                repositoryUrl={selectedRepository}
+                                shells={aasList}
+                                selectedAasList={selectedAasList}
+                                updateSelectedAasList={updateSelectedAasList}
+                                comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}
+                            ></AasList>
+                            <Box display="flex" justifyContent="flex-end" alignItems="center" gap={4} marginTop={2}>
+                                <IconButton
+                                    onClick={handleGoBack}
+                                    disabled={currentPage === 0}
+                                    data-testid="list-back-button"
+                                >
+                                    <ArrowBackIosNewIcon />
+                                </IconButton>
+                                <Typography>{t('page') + ' ' + (currentPage + 1)}</Typography>
+                                <IconButton
+                                    onClick={handleNextPage}
+                                    disabled={!currentCursor}
+                                    data-testid="list-next-button"
+                                >
+                                    <ArrowForwardIosIcon />
+                                </IconButton>
+                            </Box>
+                        </>
+                    ) : (
+                        <Box>
+                            <Typography data-testid="select-repository-text">{t('select-repository')}</Typography>
+                        </Box>
+                    )}
                 </>
             )}
         </>
