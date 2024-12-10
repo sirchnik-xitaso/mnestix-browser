@@ -1,13 +1,18 @@
-<img width="20%" src="src/assets/XitasoLogoBlack.svg" alt="XITASO Logo">
-<p style="text-align: center">
-  <img src="public/android-chrome-192x192.png" alt="Mnestix Logo">
+<p align="right">
+  <picture>
+    <source srcset="src/assets/XitasoLogo.svg"  media="(prefers-color-scheme: dark)">
+    <img src="src/assets/XitasoLogoBlack.svg" width=20%>
+  </picture>
+</p>
+<p align="center">
+ <img src="public/android-chrome-192x192.png" alt="Mnestix Logo">
 </p>
 <h1 style="text-align: center">Mnestix</h1>
 
 [![Made by XITASO](https://img.shields.io/badge/Made_by_XITASO-005962?style=flat-square)](https://xitaso.com/)
 [![MIT License](https://img.shields.io/badge/License-MIT-005962.svg?style=flat-square)](https://choosealicense.com/licenses/mit/)
 [![Yarn License](https://img.shields.io/badge/YARN-V1.22.22-005962?style=flat-square)]()
-[![Join our Community](https://img.shields.io/badge/Join_our_Community-005962?style=flat-square)](https://mnestix.io/)
+[![Join our Community](https://img.shields.io/badge/Join_our_Community-005962?style=flat-square)](https://xitaso.com/kompetenzen/mnestix/#support)
 
 ### Welcome to the Mnestix Community!
 
@@ -22,7 +27,7 @@ implementation of standardized digital twins. It opens the way for use cases suc
 You can find a demo [here](https://mnestix-prod.azurewebsites.net/).
 Some screenshots can be found in the [screenshots folder](screenshots).
 
-### **If you need support feel free to contact us through our website [Mnestix.io](https://mnestix.io/).**
+### **If you need support feel free to contact us through our website [here](https://xitaso.com/kompetenzen/mnestix/#support).**
 
 ## Quickstart
 
@@ -276,6 +281,7 @@ Mnestix provides the following configuration options. You can adapt the values i
 | `SUBMODEL_REPO_API_URL`               |                             | Default Submodel Repository to display when Submodel Id is not in Submodel Registry                                                                                                                                                | required |
 | `MNESTIX_BACKEND_API_URL`             |                             | Mnestix Backend with a lot of business comfort features like the Repository-Proxy or the Template builder                                                                                                                          | optional |
 | `AAS_LIST_FEATURE_FLAG`               | false                       | Enables or disables the AasList in the frontend. This only works in combination with `Features__AllowRetrievingAllShellsAndSubmodels` being set to `true` (Needs the Mnestix Backend to work)                                      | optional |
+| `AAS_LIST_V2_FEATURE_FLAG`            | false                       | The functionality controlled by this flag is under active development and may change without notice. Please see [details](#aas-list-v2-feature-details)                                                                            | optional |
 | `TRANSFER_FEATURE_FLAG`               | false                       | Enables or disables the Transfer Feature in the frontend. If enabled, it is possible to import a viewed AAS to a configured repository. This feature is currently being developed.                                                 | optional |
 | `AUTHENTICATION_FEATURE_FLAG`         | false                       | Enable or disable the authentication in the frontend. (Needs the Mnestix Backend to work)                                                                                                                                          | optional |
 | `COMPARISON_FEATURE_FLAG`             | false                       | Enables or disables the comparison feature.                                                                                                                                                                                        | optional |
@@ -289,6 +295,8 @@ Mnestix provides the following configuration options. You can adapt the values i
 | `KEYCLOAK_ISSUER`                     |                             | Configuration variable that specifies the URL of the Keycloak servers issuer endpoint. This endpoint provides the base URL for the Keycloak server that issues tokens and handles authentication requests                          | optional |
 | `KEYCLOAK_LOCAL_URL`                  |                             | Optional configuration variable specifically used for development environments within Docker. This allows your application to connect to a Keycloak instance running in a Docker container                                         | optional |
 | `KEYCLOAK_REALM`                      | BaSyx                       | Configuration variable that specifies the name of the Keycloak realm your application will use for authentication and authorization.                                                                                               | optional |
+| `IMPRINT_URL`                         |                             | Address that will be used in the imprint link. Will only show the link, if a value has been set.                                                                                                                                   | optional |
+| `DATA_PRIVACY_URL`                    |                             | Address that will be used in the data privacy link. Will only show the link, if a value has been set.                                                                                                                              | optional |
 
 ### How to set a custom logo
 
@@ -543,6 +551,18 @@ backend environment variable `Features__AllowRetrievingAllShellsAndSubmodels: fa
 Remember that this also means that the functionality to list all AAS won't work anymore in the Mnestix Browser, so
 disable this functionality with the environment variable `AAS_LIST_FEATURE_FLAG: false`.
 
+#### AAS List V2 Feature Details
+
+The `AAS_LIST_V2_FEATURE_FLAG` is a feature flag introduced as part of a preview release.
+It enables access to an updated list implementation that operates independently of the Mnestix API.
+
+This flag is currently disabled by default (false) and is available only in preview.
+It is not yet recommended for production environments.
+
+To enable the feature for testing or preview purposes, set the flag to true in your configuration.
+
+#### AzureAD Service
+
 One can also add an AzureAD Service to give people deeper access, this enables the "Login" Button in the Mnestix
 Browser.
 After logging in, users have access to even more functionality.
@@ -707,7 +727,7 @@ Right now, we are building a community around Mnestix.
 If you are looking for a way to support us, you can start contributing to Mnestix right away.
 For this purpose, issues which are particularly suitable for a first contribution are labeled with the tag
 `good first issue`.  
-If this is your first time contributing to a github project, we recommend having a look at this
-guide: [Contributing to a project](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).  
-We would be more than happy to have you onboard. If there is anything you want to know, feel free to contact
-us [mnestix@xitaso.com](mailto:mnestix@xitaso.com).   
+If this is your first time contributing to an eclipse project, we recommend having a look at this
+guide: [Contributing to a Eclipse project](https://www.eclipse.org/contribute/).  
+We would be more than happy to have you on board. If there is anything you want to know, feel free to contact
+us [mnestix@xitaso.com](mailto:mnestix@xitaso.com) or through our website [here](https://xitaso.com/kompetenzen/mnestix/#support).   

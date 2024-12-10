@@ -53,7 +53,7 @@ export function CarbonFootprintVisualizations(props: { submodel: Submodel }) {
     const calculationMethod = extractCalculationMethod(pcfSubmodelElements);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }} data-testid="carbonFootprintVisualizations">
             <StyledDataRow title={intl.formatMessage(messages.mnestix.productCarbonFootprint.totalCO2Equivalents)}>
                 <CO2Equivalents totalCO2Equivalents={totalCO2Equivalents} />
             </StyledDataRow>

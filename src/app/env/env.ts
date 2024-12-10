@@ -11,6 +11,7 @@ export const getEnv = async (): Promise<EnvironmentalVariables> => {
         AUTHENTICATION_FEATURE_FLAG: false,
         COMPARISON_FEATURE_FLAG: process.env.COMPARISON_FEATURE_FLAG?.toLowerCase() === 'true'.toLowerCase(),
         AAS_LIST_FEATURE_FLAG: false,
+        AAS_LIST_V2_FEATURE_FLAG:  process.env.AAS_LIST_V2_FEATURE_FLAG?.toLowerCase() === 'true'.toLowerCase(),
         TRANSFER_FEATURE_FLAG: process.env.TRANSFER_FEATURE_FLAG?.toLowerCase() === 'true'.toLowerCase(),
     };
 
@@ -32,6 +33,8 @@ export const getEnv = async (): Promise<EnvironmentalVariables> => {
         SUBMODEL_REPO_API_URL: process.env.SUBMODEL_REPO_API_URL,
         MNESTIX_BACKEND_API_URL: process.env.MNESTIX_BACKEND_API_URL,
         KEYCLOAK_ENABLED: process.env.KEYCLOAK_ENABLED?.toLowerCase() === 'true'.toLowerCase(),
+        IMPRINT_URL: process.env.IMPRINT_URL,
+        DATA_PRIVACY_URL: process.env.DATA_PRIVACY_URL,
     };
 
     const themingVariables = {
@@ -65,6 +68,7 @@ export type EnvironmentalVariables = {
     AUTHENTICATION_FEATURE_FLAG: boolean;
     COMPARISON_FEATURE_FLAG: boolean;
     AAS_LIST_FEATURE_FLAG: boolean;
+    AAS_LIST_V2_FEATURE_FLAG: boolean;
     TRANSFER_FEATURE_FLAG: boolean;
     DISCOVERY_API_URL: string | undefined;
     REGISTRY_API_URL: string | undefined;
@@ -77,4 +81,6 @@ export type EnvironmentalVariables = {
     THEME_BASE64_LOGO: string | undefined;
     THEME_LOGO_URL: string | undefined;
     KEYCLOAK_ENABLED: boolean;
+    IMPRINT_URL: string | undefined;
+    DATA_PRIVACY_URL: string | undefined;
 };
