@@ -2,10 +2,14 @@ name: Docker
 
 on:
   push:
-    branches: ['**']
+    branches: ['main', 'dev', 'staging']
     tags: ['v*.*.*']
   pull_request:
-    branches: ['**']
+    branches: ['main', 'dev', 'staging']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   # github.repository as <account>/<repo>
@@ -64,6 +68,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # add more containers to run more tests in parallel
         containers: [1, 2, 3, 4]
 
     steps:
@@ -93,7 +98,6 @@ jobs:
 
       - name: E2E test collect artifact
         id: test_artifact
-        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: cypress-artifacts-${{ matrix.containers }}
@@ -103,6 +107,7 @@ jobs:
     name: Push image to registry
     needs: ['build-browser-image', 'unit-tests', 'e2e-tests']
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/dev'
     permissions:
       contents: read
       packages: write
