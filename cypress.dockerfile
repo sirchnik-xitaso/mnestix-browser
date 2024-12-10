@@ -13,5 +13,5 @@ COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
 
 RUN yarn install
- 
+
 ENTRYPOINT ["yarn", "run", "cypress", "run"]
