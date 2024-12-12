@@ -84,8 +84,10 @@ jobs:
         run: docker load -i mnestix-browser.tar
 
       # image too big to be reused
-      - name: Build test image
-        run: docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests build cypress-test
+      - name: prepare tests
+        run: |
+          docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests build cypress-test
+          docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests pull
 
       - name: Run e2e tests
         id: test
