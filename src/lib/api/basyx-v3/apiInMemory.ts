@@ -8,9 +8,10 @@ import {
     wrapSuccess,
 } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { AttachmentDetails } from 'lib/types/TransferServiceData';
-import { AasRepositoryResponse } from 'lib/api/basyx-v3/api';
 import { encodeBase64, safeBase64Decode } from 'lib/util/Base64Util';
-import ServiceReachable from 'test-utils/TestUtils';
+import { ServiceReachable } from 'test-utils/TestUtils';
+import { MultiLanguageValueOnly, PaginationData } from 'lib/api/basyx-v3/types';
+import { LangStringTextType, MultiLanguageProperty } from '@aas-core-works/aas-core3.0-typescript/types';
 
 const options = {
     headers: { 'Content-type': 'application/json; charset=utf-8' },
@@ -36,7 +37,7 @@ export class AssetAdministrationShellRepositoryApiInMemory implements IAssetAdmi
         _limit?: number | undefined,
         _cursor?: string | undefined,
         _options?: object | undefined,
-    ): Promise<ApiResponseWrapper<AasRepositoryResponse>> {
+    ): Promise<ApiResponseWrapper<PaginationData<AssetAdministrationShell[]>>> {
         if (this.reachable !== ServiceReachable.Yes)
             return wrapErrorCode(ApiResultStatus.UNKNOWN_ERROR, 'Service not reachable');
 
@@ -99,10 +100,23 @@ export class AssetAdministrationShellRepositoryApiInMemory implements IAssetAdmi
     }
 
     async getSubmodelReferencesFromShell(
-        _aasId: string,
+        aasId: string,
         _options?: object | undefined,
-    ): Promise<ApiResponseWrapper<Reference[]>> {
-        throw new Error('Method not implemented.');
+    ): Promise<ApiResponseWrapper<PaginationData<Reference[]>>> {
+        if (this.reachable !== ServiceReachable.Yes)
+            return wrapErrorCode(ApiResultStatus.UNKNOWN_ERROR, 'Service not reachable');
+        const foundReferences = this.shellsInRepository.get(aasId)?.submodels;
+        if (foundReferences) {
+            const paginationData = { paging_metadata: {}, result: foundReferences };
+            const response = new Response(JSON.stringify(paginationData), options);
+            return await wrapResponse(response);
+        }
+        return Promise.resolve(
+            wrapErrorCode(
+                ApiResultStatus.NOT_FOUND,
+                `no submodel references found in the repository '${this.getBaseUrl()}' for aasId: '${aasId}'`,
+            ),
+        );
     }
 
     async getThumbnailFromShell(_aasId: string, _options?: object): Promise<ApiResponseWrapper<Blob>> {
@@ -169,4 +183,55 @@ export class SubmodelRepositoryApiInMemory implements ISubmodelRepositoryApi {
     ): Promise<ApiResponseWrapper<Blob>> {
         throw new Error('Method not implemented.');
     }
+
+    /**
+     * Works right now only with MultiLanguageProperties.
+     * @param submodelId
+     * @param idShortPath
+     * @param _options
+     */
+    async getSubmodelElement(
+        submodelId: string,
+        idShortPath: string,
+        _options?: object,
+    ): Promise<ApiResponseWrapper<MultiLanguageValueOnly>> {
+        if (this.reachable !== ServiceReachable.Yes)
+            return wrapErrorCode(ApiResultStatus.UNKNOWN_ERROR, 'Service not reachable');
+        const foundSubmodel = this.submodelsInRepository.get(submodelId);
+        const element = foundSubmodel?.submodelElements?.find((el) => el.idShort === idShortPath);
+        if (element) {
+            const mlpValue = convertDesignation((element as MultiLanguageProperty).value);
+            const response = new Response(JSON.stringify(mlpValue), options);
+            return wrapResponse(response);
+        }
+        return wrapErrorCode(
+            ApiResultStatus.NOT_FOUND,
+            `no submodel element found in the repository: '${this.baseUrl}' for submodel: '${submodelId}'`,
+        );
+    }
+
+    async getSubmodelMetaData(submodelId: string, _options?: object): Promise<ApiResponseWrapper<Submodel>> {
+        if (this.reachable !== ServiceReachable.Yes)
+            return wrapErrorCode(ApiResultStatus.UNKNOWN_ERROR, 'Service not reachable');
+        const foundSubmodel = this.submodelsInRepository.get(submodelId);
+        if (foundSubmodel) {
+            const response = new Response(JSON.stringify(foundSubmodel), options);
+            return wrapResponse(response);
+        }
+        return wrapErrorCode(
+            ApiResultStatus.NOT_FOUND,
+            `no submodel found in the repository: '${this.baseUrl}' for submodel: '${submodelId}'`,
+        );
+    }
+}
+
+export function convertDesignation(mlpValue: LangStringTextType[] | null): Record<string, string> | null {
+    if (!mlpValue) return null;
+    return mlpValue.reduce(
+        (acc, designation) => {
+            acc[designation.language] = designation.text;
+            return acc;
+        },
+        {} as Record<string, string>,
+    );
 }
