@@ -11,7 +11,10 @@
     "productClassHeading": "Produktklasse",
     "page": "Seite",
     "repository-dropdown": "AAS Repository",
-    "select-repository": "Bitte wählen Sie ein Repository aus"
+    "select-repository": "Bitte wählen Sie ein Repository aus",
+    "titleComparisonAddButton": "Füge VWS zum Vergleich hinzu",
+    "titleViewAASButton": "VWS anzeigen",
+    "maxElementsWarning": "Maximal 3 Elemente selektierbar"
   },
   "dashboard": {
     "welcome-text": "Willkommen bei Mnestix",
@@ -23,11 +26,13 @@
     "enter-manually-label": "oder manuell eingeben"
   },
   "submodels": {
+    "title": "Teilmodelle",
     "timeSeries": {
       "internalSegments": "Interne Segmente",
       "linkedSegments": "Verlinkte Segmente",
       "selectTimeframe": "Auswahl des Zeitabschnitts"
-    }
+    },
+    "renderError": "Teilmodell konnte nicht gerendert werden."
   },
   "settings": {
     "header": "Einstellungen"
