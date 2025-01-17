@@ -2,11 +2,51 @@ import {
     DataTypeDefXsd,
     IAbstractLangString,
     ISubmodelElement,
+    KeyTypes,
     MultiLanguageProperty,
+    Property,
     Submodel,
+    SubmodelElementCollection,
 } from '@aas-core-works/aas-core3.0-typescript/types';
 import { IntlShape } from 'react-intl';
 import { idEquals } from './IdValidationUtil';
+import { getKeyType } from 'lib/util/KeyTypeUtil';
+
+export function getTranslationTextNext(element: MultiLanguageProperty, locale: string) {
+    const value = element.value?.find((el) => el.language == locale)?.text;
+    return value || null;
+}
+
+export function findSubmodelElementByIdShort(
+    elements: ISubmodelElement[] | null,
+    idShort: string | null,
+): ISubmodelElement | null {
+    if (!elements) return null;
+    for (const el of elements) {
+        if (el.idShort == idShort) {
+            return el;
+        } else if (getKeyType(el) == KeyTypes.SubmodelElementCollection) {
+            const innerElements = (el as SubmodelElementCollection).value;
+            const foundElement = findSubmodelElementByIdShort(innerElements, idShort);
+            if (foundElement) {
+                return foundElement;
+            }
+        }
+    }
+    return null;
+}
+
+export function findValueByIdShort(elements: ISubmodelElement[] | null, idShort: string | null, locale: string) {
+    const element = findSubmodelElementByIdShort(elements, idShort);
+    switch (!element || getKeyType(element)) {
+        case KeyTypes.MultiLanguageProperty:
+            return getTranslationTextNext(element as MultiLanguageProperty, locale);
+        case KeyTypes.Property:
+            return (element as Property).value;
+        default:
+            return null;
+    }
+}
 
 export function getTranslationText(
     input: MultiLanguageProperty | IAbstractLangString[] | undefined,
