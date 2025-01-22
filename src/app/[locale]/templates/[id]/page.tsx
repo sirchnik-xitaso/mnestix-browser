@@ -20,7 +20,7 @@ import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
 import { messages } from 'lib/i18n/localization';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { showError } from 'lib/util/ErrorHandlerUtil';
+
 import {
     updateNodeIds,
     getParentOfElement,
@@ -41,6 +41,7 @@ import { deleteCustomTemplateById, getCustomTemplateById, getDefaultTemplates } 
 import { TemplateDeleteDialog } from 'app/[locale]/templates/_components/TemplateDeleteDialog';
 import { ISubmodelElement, SubmodelElementCollection } from '@aas-core-works/aas-core3.0-typescript/dist/types/types';
 import { clone } from 'lodash';
+import { useShowError } from 'lib/hooks/UseShowError';
 
 export default function Page() {
     const { id } = useParams<{ id: string }>();
@@ -62,6 +63,8 @@ export default function Page() {
     const [deletedItems, setDeletedItems] = useState<string[]>([]);
     const [defaultTemplates, setDefaultTemplates] = useState<Submodel[]>();
     const env = useEnv();
+    const { showError } = useShowError();
+
     const fetchCustom = async () => {
         if (!id) return;
         const custom = await getCustomTemplateById(id);
@@ -97,7 +100,7 @@ export default function Page() {
                     await fetchCustom();
                 }
             } catch (e) {
-                showError(e, notificationSpawner);
+                showError(e);
             } finally {
                 setIsLoading(false);
             }
@@ -134,7 +137,7 @@ export default function Page() {
             setChangesMade(false);
             handleMenuClose();
         } catch (e) {
-            showError(e, notificationSpawner);
+            showError(e);
         } finally {
             setIsLoading(false);
         }
@@ -158,7 +161,7 @@ export default function Page() {
             });
             navigate.push('/templates');
         } catch (e) {
-            showError(e, notificationSpawner);
+            showError(e);
         }
     };
 
@@ -208,7 +211,7 @@ export default function Page() {
                 handleSuccessfulSave();
                 setLocalFrontendTemplate(updatedTemplate);
             } catch (e) {
-                showError(e, notificationSpawner);
+                showError(e);
             } finally {
                 setIsSaving(false);
             }
