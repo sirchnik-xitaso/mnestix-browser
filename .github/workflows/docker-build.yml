@@ -33,13 +33,11 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build image
-        id: build
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64
           context: "."
           cache-to: type=gha,scope=amd64,mode=max
-          cache-from: type=gha,scope=amd64
           target: production
           push: false
           tags: mnestix/mnestix-browser:latest
@@ -83,11 +81,12 @@ jobs:
       - name: Pull images
         run: docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests pull
 
+      # overwrite the pulled image with the new image
       - name: Load mnestix-browser image
         run: docker load -i mnestix-browser.tar
 
       - name: Run e2e tests
-        id: test
+        timeout-minutes: 18
         run: |
           docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests up -d &&
           docker compose -f compose.yml -f docker-compose/compose.test.yml attach cypress-test
@@ -98,15 +97,11 @@ jobs:
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
       - name: E2E test collect artifact
-        id: test_artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cypress-artifacts-${{ matrix.containers }}
           path: cypress-artifacts/
-
-      - name: Fail if e2e tests failed
-        if: ${{ failure() }}
-        run: exit 1
 
   unit-tests:
     name: Unit Tests
@@ -120,7 +115,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run unit tests
-        id: test_units
         run: npx jest
   
   # Target for PR Merge Check
@@ -154,7 +148,6 @@ jobs:
           platforms: linux/arm64
           context: "."
           cache-to: type=gha,scope=arm64,mode=max
-          cache-from: type=gha,scope=arm64
           target: production
           push: false
       
@@ -187,7 +180,6 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
       - name: Build and push docker images
-        id: push-prod
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
