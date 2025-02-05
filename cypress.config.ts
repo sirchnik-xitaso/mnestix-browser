@@ -23,12 +23,6 @@ export default defineConfig({
         specPattern: 'cypress/e2e/**/*.spec.{js,jsx,ts,tsx}',
         experimentalRunAllSpecs: true,
         setupNodeEvents(on, config) {
-            on('before:browser:launch', (browser, launchOptions) => {
-                if (browser.family === 'chromium' && browser.name !== 'electron') {
-                    // auto open devtools
-                    launchOptions.args.push('--auto-open-devtools-for-tabs');
-                }
-            });
             cypressSplit(on, config);
             return config;
         },

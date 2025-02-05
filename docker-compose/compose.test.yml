@@ -11,13 +11,14 @@ services:
       CYPRESS_MNESTIX_BACKEND_API_URL: 'http://mnestix-api:5064'
       CYPRESS_AAS_DISCOVERY_API_URL: 'http://mnestix-api:5064/discovery'
       ELECTRON_ENABLE_LOGGING: 1
+      SPLIT: ${SPLIT:-1}
+      SPLIT_INDEX: ${SPLIT_INDEX:-0}
 
       DISPLAY: $DISPLAY
       XDG_RUNTIME_DIR: /tmp
       WAYLAND_DISPLAY: $WAYLAND_DISPLAY
       PULSE_SERVER: $PULSE_SERVER
     command: ${CYPRESS_TEST_CMD:-open --browser chrome --e2e}
-    user: 1000:1000
     volumes:
       - ./cypress/:/cypress_Tests/cypress
       - ./cypress.config.ts:/cypress_Tests/cypress.config.ts
