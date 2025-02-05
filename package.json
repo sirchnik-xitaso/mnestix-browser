@@ -105,7 +105,7 @@
         "docker:backend": "docker compose -f compose.yml -f docker-compose/compose.dev.yml --profile basyx --profile backend up",
         "docker:prod": "docker compose up",
         "docker:test": "docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests --profile keycloak up -d && docker compose -f compose.yml -f docker-compose/compose.test.yml --profile test --profile keycloak up cypress-test",
-        "docker:test-headless": "CYPRESS_TEST_CMD=run docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests --profile keycloak up -d && CYPRESS_TEST_CMD=run docker compose -f compose.yml -f docker-compose/compose.test.yml --profile keycloak up cypress-test",
+        "docker:test-open": "USER_MAP=\"$(id -u):$(id -g)\" CYPRESS_TEST_CMD='open --browser chrome --e2e' docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests --profile keycloak up -d && USER_MAP=\"$(id -u):$(id -g)\" CYPRESS_TEST_CMD='open --browser chrome --e2e' docker compose -f compose.yml -f docker-compose/compose.test.yml --profile keycloak up cypress-test",
         "docker:stop": "docker compose -f compose.yml -f docker-compose/compose.dev.yml -f docker-compose/compose.test.yml kill",
         "docker:down": "docker compose -f compose.yml -f docker-compose/compose.dev.yml -f docker-compose/compose.test.yml down",
         "docker:prune": "docker compose -f compose.yml -f docker-compose/compose.dev.yml -f docker-compose/compose.test.yml -f docker-compose/compose.keycloak.yml down -v && docker network prune && docker network rm mnestix-network",

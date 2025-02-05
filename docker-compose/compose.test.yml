@@ -18,7 +18,8 @@ services:
       XDG_RUNTIME_DIR: /tmp
       WAYLAND_DISPLAY: $WAYLAND_DISPLAY
       PULSE_SERVER: $PULSE_SERVER
-    command: ${CYPRESS_TEST_CMD:-open --browser chrome --e2e}
+    command: ${CYPRESS_TEST_CMD:-run}
+    user: 1000:1000
     volumes:
       - ./cypress/:/cypress_Tests/cypress
       - ./cypress.config.ts:/cypress_Tests/cypress.config.ts

@@ -93,7 +93,6 @@ jobs:
         env:
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
-          CYPRESS_TEST_CMD: run
 
       - name: E2E test collect artifact
         if: always()
