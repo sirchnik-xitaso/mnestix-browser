@@ -9,8 +9,6 @@
     Typography,
     useTheme,
 } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
-import { messages } from 'lib/i18n/localization';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { AasListTableRow } from 'app/[locale]/list/_components/AasListTableRow';
 import { AasListDto } from 'lib/services/list-service/ListService';
@@ -36,6 +34,7 @@ export default function AasList(props: AasListProps) {
         { label: t('productDesignationHeading') },
         { label: t('assetIdHeading') },
         { label: t('aasIdHeading') },
+        '',
     ];
 
     /**
@@ -61,12 +60,14 @@ export default function AasList(props: AasListProps) {
                         >
                             {comparisonFeatureFlag && (
                                 <TableCell align="center" width="50px">
-                                    <Tooltip
-                                        title={<FormattedMessage {...messages.mnestix.aasList.compareTooltip} />}
-                                        arrow
-                                    >
+                                    <Tooltip title={t('compareTooltip')} arrow>
                                         <CompareArrowsIcon
-                                            sx={{ width: '35px', height: '35px', verticalAlign: 'middle' }}
+                                            color="secondary"
+                                            sx={{
+                                                width: '35px',
+                                                height: '35px',
+                                                verticalAlign: 'middle',
+                                            }}
                                         />
                                     </Tooltip>
                                 </TableCell>
@@ -74,7 +75,14 @@ export default function AasList(props: AasListProps) {
                             {!!tableHeaders &&
                                 tableHeaders.map((header: { label: string }, index) => (
                                     <TableCell key={index}>
-                                        <Typography fontWeight="bold">{header.label}</Typography>
+                                        <Typography
+                                            variant="h5"
+                                            color="secondary"
+                                            letterSpacing={0.16}
+                                            fontWeight={700}
+                                        >
+                                            {header.label}
+                                        </Typography>
                                     </TableCell>
                                 ))}
                         </TableRow>
@@ -85,7 +93,6 @@ export default function AasList(props: AasListProps) {
                                 <TableRow
                                     key={aasListEntry.aasId}
                                     sx={{
-                                        '&:last-child td, &:last-child th': { border: 0 },
                                         backgroundColor: theme.palette?.common?.white,
                                         '&:hover': { backgroundColor: theme.palette.action.hover },
                                     }}

@@ -1,22 +1,20 @@
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowForward } from '@mui/icons-material';
-import { messages } from 'lib/i18n/localization';
 import CloseIcon from '@mui/icons-material/Close';
 import { SquaredIconButton } from 'components/basics/Buttons';
 import { LocalizedError } from 'lib/util/LocalizedError';
-import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
-import { showError } from 'lib/util/ErrorHandlerUtil';
+import { useShowError } from 'lib/hooks/UseShowError';
+import { useTranslations } from 'next-intl';
 
 export function ManualAasInput(props: { onSubmit: (input: string) => Promise<void> }) {
     const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [errorText, setErrorText] = useState<string>('');
-    const intl = useIntl();
     const inputRef = useRef<HTMLInputElement>(null);
-    const notificationSpawner = useNotificationSpawner();
+    const { showError } = useShowError();
+    const t = useTranslations();
 
     useEffect(() => {
         inputRef?.current?.focus();
@@ -38,9 +36,9 @@ export function ManualAasInput(props: { onSubmit: (input: string) => Promise<voi
             await props.onSubmit(inputValue);
         } catch (e) {
             setIsLoading(false);
-            const msg = e instanceof LocalizedError ? e.descriptor : messages.mnestix.unexpectedError;
-            setError(intl.formatMessage(msg));
-            if (!(e instanceof LocalizedError)) showError(e, notificationSpawner);
+            const msg = e instanceof LocalizedError ? e.descriptor : 'errors.unexpectedError';
+            setError(t(msg));
+            if (!(e instanceof LocalizedError)) showError(e);
         }
     };
 
@@ -60,7 +58,7 @@ export function ManualAasInput(props: { onSubmit: (input: string) => Promise<voi
         <Box display="flex" justifyContent="center">
             <TextField
                 id="manual-input"
-                label={<FormattedMessage {...messages.mnestix.aasOrAssetId} />}
+                label={t('dashboard.aasOrAssetId')}
                 error={isError}
                 helperText={errorText}
                 onChange={handleChange}

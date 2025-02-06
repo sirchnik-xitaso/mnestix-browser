@@ -1,9 +1,18 @@
-import { MessageDescriptorWithId } from 'lib/i18n/localization';
+type Paths<Schema, Path extends string = ''> = Schema extends string
+    ? Path
+    : Schema extends object
+        ? {
+            [K in keyof Schema & string]: Paths<
+                Schema[K],
+                `${Path}${Path extends '' ? '' : '.'}${K}`
+            >;
+        }[keyof Schema & string]
+        : never;
 
 export class LocalizedError extends Error {
-    descriptor: MessageDescriptorWithId;
+    descriptor: Paths<IntlMessages>;
 
-    constructor(message: MessageDescriptorWithId) {
+    constructor(message: Paths<IntlMessages>) {
         const trueProto = new.target.prototype;
         super();
         Object.setPrototypeOf(this, trueProto);

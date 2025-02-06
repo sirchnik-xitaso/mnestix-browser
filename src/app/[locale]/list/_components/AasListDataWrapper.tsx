@@ -1,33 +1,43 @@
 import { AasListDto, ListEntityDto } from 'lib/services/list-service/ListService';
 import { useAsyncEffect } from 'lib/hooks/UseAsyncEffect';
 import { getAasListEntities } from 'lib/services/list-service/aasListApiActions';
-import { showError } from 'lib/util/ErrorHandlerUtil';
+import { useShowError } from 'lib/hooks/UseShowError';
 import { useState } from 'react';
-import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
 import { CenteredLoadingSpinner } from 'components/basics/CenteredLoadingSpinner';
 import AasList from './AasList';
 import { useEnv } from 'app/env/provider';
 import { AasListComparisonHeader } from './AasListComparisonHeader';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardContent, IconButton, Typography } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { SelectRepository } from './filter/SelectRepository';
 import { useTranslations } from 'next-intl';
+import { ApiResponseWrapperError, ApiResultStatus } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
+import { AuthenticationPrompt } from 'components/authentication/AuthenticationPrompt';
 
 export default function AasListDataWrapper() {
     const [isLoadingList, setIsLoadingList] = useState(false);
     const [aasList, setAasList] = useState<AasListDto>();
     const [, setAasListFiltered] = useState<ListEntityDto[]>();
     const [selectedAasList, setSelectedAasList] = useState<string[]>();
-    const notificationSpawner = useNotificationSpawner();
     const [selectedRepository, setSelectedRepository] = useState<string | undefined>();
     const env = useEnv();
     const t = useTranslations('aas-list');
+    const { showError } = useShowError();
 
     //Pagination
     const [currentCursor, setCurrentCursor] = useState<string>();
     const [cursorHistory, setCursorHistory] = useState<(string | undefined)[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
+
+    //Authentication
+    const [needAuthentication, setNeedAuthentication] = useState<boolean>(false);
+
+    const clearResults = () => {
+        setAasList(undefined);
+        setCurrentCursor(undefined);
+        setNeedAuthentication(false);
+    };
 
     useAsyncEffect(async () => {
         resetPagination();
@@ -38,6 +48,7 @@ export default function AasListDataWrapper() {
         if (!selectedRepository) return;
 
         setIsLoadingList(true);
+        clearResults();
         const response = await getAasListEntities(selectedRepository!, 10, newCursor);
 
         if (response.success) {
@@ -49,7 +60,11 @@ export default function AasListDataWrapper() {
                 setCursorHistory((prevHistory) => [...prevHistory, newCursor]);
             }
         } else {
-            showError(response.error, notificationSpawner);
+            if ((response.error as ApiResponseWrapperError<AasListDto>).errorCode == ApiResultStatus.UNAUTHORIZED) {
+                setNeedAuthentication(true);
+            } else {
+                showError(response.error);
+            }
         }
         setIsLoadingList(false);
     };
@@ -95,62 +110,69 @@ export default function AasListDataWrapper() {
         setSelectedAasList(selected);
     };
 
-    return (
-        <>
-            <Typography marginBottom={2} marginTop={-1}>
-                {t('subHeader')}
+    const pagination = (
+        <Box display="flex" justifyContent="flex-end" alignItems="center" marginTop={0}>
+            <Typography paddingRight="1.625rem" fontSize="0.75rem">
+                {t('page') + ' ' + (currentPage + 1)}
             </Typography>
+            <IconButton onClick={handleGoBack} disabled={currentPage === 0} data-testid="list-back-button">
+                <ArrowBackIosNewIcon fontSize="small" />
+            </IconButton>
+            <IconButton onClick={handleNextPage} disabled={!currentCursor} data-testid="list-next-button">
+                <ArrowForwardIosIcon fontSize="small" />
+            </IconButton>
+        </Box>
+    );
 
-            <Box display="flex" justifyContent="space-between" marginBottom={2}>
-                <Box display="flex" gap={4}>
-                    <SelectRepository onSelectedRepositoryChanged={setSelectedRepository} />
+    const ListContent = (props: { selectedRepository: string | undefined }) => {
+        const selectedRepository = props.selectedRepository;
+        if (!selectedRepository) {
+            return (
+                <Box>
+                    <Typography data-testid="select-repository-text">{t('select-repository')}</Typography>
                 </Box>
-                {env.COMPARISON_FEATURE_FLAG && (
-                    <AasListComparisonHeader
-                        selectedAasList={selectedAasList}
-                        updateSelectedAasList={updateSelectedAasList}
-                    />
-                )}
-            </Box>
-            {isLoadingList ? (
-                <CenteredLoadingSpinner sx={{ mt: 10 }} />
-            ) : (
-                <>
-                    {selectedRepository ? (
-                        <>
-                            <AasList
-                                data-testid="aas-list"
-                                repositoryUrl={selectedRepository}
-                                shells={aasList}
-                                selectedAasList={selectedAasList}
-                                updateSelectedAasList={updateSelectedAasList}
-                                comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}
-                            ></AasList>
-                            <Box display="flex" justifyContent="flex-end" alignItems="center" gap={4} marginTop={2}>
-                                <IconButton
-                                    onClick={handleGoBack}
-                                    disabled={currentPage === 0}
-                                    data-testid="list-back-button"
-                                >
-                                    <ArrowBackIosNewIcon />
-                                </IconButton>
-                                <Typography>{t('page') + ' ' + (currentPage + 1)}</Typography>
-                                <IconButton
-                                    onClick={handleNextPage}
-                                    disabled={!currentCursor}
-                                    data-testid="list-next-button"
-                                >
-                                    <ArrowForwardIosIcon />
-                                </IconButton>
-                            </Box>
-                        </>
-                    ) : (
-                        <Box>
-                            <Typography data-testid="select-repository-text">{t('select-repository')}</Typography>
-                        </Box>
+            );
+        }
+
+        if (needAuthentication) {
+            return <AuthenticationPrompt />;
+        }
+
+        return (
+            <>
+                <AasList
+                    data-testid="aas-list"
+                    repositoryUrl={selectedRepository}
+                    shells={aasList}
+                    selectedAasList={selectedAasList}
+                    updateSelectedAasList={updateSelectedAasList}
+                    comparisonFeatureFlag={env.COMPARISON_FEATURE_FLAG}
+                ></AasList>
+                {pagination}
+            </>
+        );
+    };
+
+    return (
+        <Card>
+            <CardContent sx={{ paddingX: 0, paddingY: '1.625rem', '&:last-child': { paddingBottom: '0' } }}>
+                <Box display="flex" justifyContent="space-between" marginBottom="1.625rem" paddingX="1rem">
+                    <Box display="flex" gap={4}>
+                        <SelectRepository onSelectedRepositoryChanged={setSelectedRepository} />
+                    </Box>
+                    {env.COMPARISON_FEATURE_FLAG && (
+                        <AasListComparisonHeader
+                            selectedAasList={selectedAasList}
+                            updateSelectedAasList={updateSelectedAasList}
+                        />
                     )}
-                </>
-            )}
-        </>
+                </Box>
+                {isLoadingList ? (
+                    <CenteredLoadingSpinner sx={{ my: 10 }} />
+                ) : (
+                    <ListContent selectedRepository={selectedRepository} />
+                )}
+            </CardContent>
+        </Card>
     );
 }

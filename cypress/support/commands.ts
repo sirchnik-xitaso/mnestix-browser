@@ -9,7 +9,7 @@ import compareSubmodels from '../fixtures/cypress_e2e/CompareMockData/cy_compare
 import qrAAS from '../fixtures/cypress_e2e/QrScannerMockData/cy_qrScannerAas.json';
 import qrSubmodels from '../fixtures/cypress_e2e/QrScannerMockData/cy_qrScannerNameplateSubmodel.json';
 import listAasMockData from '../fixtures/cypress_e2e/AasListMockData/cyListAasMockData.json';
-import listAasSubmodelMockData from '../fixtures/cypress_e2e/AasListMockData/cyListAasTechnicalDataSubmodel.json';
+import listAasSubmodelMockData from '../fixtures/cypress_e2e/AasListMockData/cy_ListNameplateSubmodel.json';
 import thumbnailAasMockData from '../fixtures/cypress_e2e/ThumbnailFileMockData/thumbnailAasMockData.json';
 import toBase64 from './base64-conversion';
 
@@ -171,7 +171,7 @@ Cypress.Commands.add('uploadThumbnailToAas', (aasId: string) => {
                 encoding: 'binary',
                 headers: {
                     ApiKey: Cypress.env('MNESTIX_API_KEY'),
-                }
+                },
             });
         });
 });
@@ -179,4 +179,19 @@ Cypress.Commands.add('uploadThumbnailToAas', (aasId: string) => {
 Cypress.Commands.add('deleteThumbnailFromAas', (aasId: string) => {
     const encodedAasId = btoa(aasId).replace(/=+$/g, '');
     cy.repoRequest('DELETE', '/shells/' + encodedAasId + '/asset-information/thumbnail', null);
+});
+
+Cypress.Commands.add('keycloakLogin', (login: string, password: string) => {
+    cy.getByTestId('header-burgermenu').click();
+    cy.getByTestId('login-button').click();
+    cy.origin(Cypress.env('KEYCLOAK_ISSUER'), { args: { login, password } }, ({ login, password }) => {
+        cy.get('#username').invoke('focus').type(login);
+        cy.get('#password').invoke('focus').type(password, { log: false });
+        cy.get('#kc-login').invoke('focus').click();
+    });
+    cy.get('button').click();
+});
+
+Cypress.Commands.add('keycloakLogout', () => {
+    cy.getByTestId('logout-button').click();
 });

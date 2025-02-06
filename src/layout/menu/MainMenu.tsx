@@ -1,17 +1,17 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import { alpha, Box, Divider, Drawer, IconButton, List, styled, Typography } from '@mui/material';
-import { Dashboard, Login, Logout, OpenInNew, Settings } from '@mui/icons-material';
+import { Dashboard, OpenInNew, Settings } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { useAuth } from 'lib/hooks/UseAuth';
-import { FormattedMessage } from 'react-intl';
-import { messages } from 'lib/i18n/localization';
 import { TemplateIcon } from 'components/custom-icons/TemplateIcon';
 import { MenuHeading } from './MenuHeading';
 import { MenuListItem, MenuListItemProps } from './MenuListItem';
 import ListIcon from '@mui/icons-material/List';
 import packageJson from '../../../package.json';
 import { useEnv } from 'app/env/provider';
-import { ExternalLink } from 'layout/menu/ExternalLink';
+import BottomMenu from 'layout/menu/BottomMenu';
+import { useTranslations } from 'next-intl';
+import { MnestixRole } from 'components/authentication/AllowedRoutes';
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
     '.MuiDrawer-paper': {
@@ -59,10 +59,10 @@ export default function MainMenu() {
     const auth = useAuth();
     const env = useEnv();
     const useAuthentication = env.AUTHENTICATION_FEATURE_FLAG;
-    const copyrightString = `Copyright © ${new Date().getFullYear()} XITASO GmbH`;
     const versionString = 'Version ' + packageJson.version;
-    const imprintString = env.IMPRINT_URL;
-    const dataPrivacyString = env.DATA_PRIVACY_URL;
+    const mnestixRole = auth.getAccount()?.user.mnestixRole ?? MnestixRole.MnestixGuest;
+    const allowedRoutes = auth.getAccount()?.user.allowedRoutes ?? [];
+    const t = useTranslations('mainMenu');
 
     const getAuthName = () => {
         const user = auth?.getAccount()?.user;
@@ -82,34 +82,44 @@ export default function MainMenu() {
         setDrawerOpen(open);
     };
 
-    const adminMainMenu: MenuListItemProps[] = [
+    const checkIfRouteIsAllowed = (route: string) => {
+        return (useAuthentication && auth.isLoggedIn && allowedRoutes.includes(route)) || !useAuthentication;
+    };
+
+    const basicMenu: MenuListItemProps[] = [
         {
-            label: <FormattedMessage {...messages.mnestix.dashboard} />,
+            label: t('dashboard'),
             to: '/',
             icon: <Dashboard />,
         },
-        {
-            label: <FormattedMessage {...messages.mnestix.settings} />,
+    ];
+
+    if (env.AAS_LIST_FEATURE_FLAG) {
+        const listItemToAdd = {
+            label: t('aasList'),
+            to: '/list',
+            icon: <ListIcon />,
+        };
+        basicMenu.push(listItemToAdd);
+    }
+
+    if (env.MNESTIX_BACKEND_API_URL && checkIfRouteIsAllowed('/templates')) {
+        const templateItemToAdd = {
+            label: t('templates'),
+            to: '/templates',
+            icon: <TemplateIcon />,
+        };
+        basicMenu.push(templateItemToAdd);
+    }
+
+    if (checkIfRouteIsAllowed('/settings')) {
+        const settingsMenu = {
+            label: t('settings'),
             to: '/settings',
-            icon: <Settings />,
-        },
-    ];
-
-    const adminBottomMenu: MenuListItemProps[] = [
-        {
-            label: <FormattedMessage {...messages.mnestix.logout} />,
-            icon: <Logout />,
-            onClick: () => auth.logout(),
-        },
-    ];
-
-    const guestMainMenu: MenuListItemProps[] = [
-        {
-            label: <FormattedMessage {...messages.mnestix.dashboard} />,
-            to: '/',
-            icon: <Dashboard />,
-        },
-    ];
+            icon: <Settings data-testid="settings-menu-icon" />,
+        };
+        basicMenu.push(settingsMenu);
+    }
 
     const guestMoreMenu: MenuListItemProps[] = [
         {
@@ -120,35 +130,6 @@ export default function MainMenu() {
             icon: <OpenInNew />,
         },
     ];
-
-    const guestBottomMenu: MenuListItemProps[] = [
-        {
-            label: <FormattedMessage {...messages.mnestix.login} />,
-            icon: <Login />,
-            onClick: () => auth.login(),
-        },
-    ];
-
-    if (env.AAS_LIST_FEATURE_FLAG) {
-        const listItemToAdd = {
-            label: <FormattedMessage {...messages.mnestix.list} />,
-            to: '/list',
-            icon: <ListIcon />,
-        };
-
-        guestMainMenu.push(listItemToAdd);
-        adminMainMenu.splice(1, 0, listItemToAdd);
-    }
-
-    if (env.MNESTIX_BACKEND_API_URL){
-        const templateItemToAdd = {
-            label: <FormattedMessage {...messages.mnestix.templates} />,
-                to: '/templates',
-            icon: <TemplateIcon />,
-        };
-
-        adminMainMenu.push(templateItemToAdd);
-    }
 
     return (
         <>
@@ -161,26 +142,22 @@ export default function MainMenu() {
                 <MenuIcon />
             </IconButton>
             <StyledDrawer anchor="left" open={drawerOpen} onClose={handleMenuInteraction(false)}>
-                <Box onClick={handleMenuInteraction(false)} onKeyDown={handleMenuInteraction(false)}>
+                <Box
+                    onClick={handleMenuInteraction(false)}
+                    onKeyDown={handleMenuInteraction(false)}
+                    data-testid="main-menu"
+                >
                     <List>
-                        <MenuHeading>
-                            <FormattedMessage {...messages.mnestix.repository} />
-                        </MenuHeading>
-                        {!useAuthentication || auth.isLoggedIn ? (
+                        <MenuHeading>{t('repository')}</MenuHeading>
+                        <>
+                            {basicMenu.map((props, i) => (
+                                <MenuListItem {...props} key={'adminMainMenu' + i} />
+                            ))}
+                        </>
+                        {useAuthentication && !auth.isLoggedIn && (
                             <>
-                                {adminMainMenu.map((props, i) => (
-                                    <MenuListItem {...props} key={'adminMainMenu' + i} />
-                                ))}
-                            </>
-                        ) : (
-                            <>
-                                {guestMainMenu.map((props, i) => (
-                                    <MenuListItem {...props} key={'guestMainMenu' + i} />
-                                ))}
                                 <StyledDivider />
-                                <MenuHeading>
-                                    <FormattedMessage {...messages.mnestix.findOutMore} />
-                                </MenuHeading>
+                                <MenuHeading>{t('findOutMore')}</MenuHeading>
                                 {guestMoreMenu.map((props, i) => (
                                     <MenuListItem {...props} key={'guestMoreMenu' + i} />
                                 ))}
@@ -192,26 +169,7 @@ export default function MainMenu() {
                     <Typography>{versionString}</Typography>
                 </Box>
                 {useAuthentication && (
-                    <>
-                        <StyledDivider />
-                        <List>
-                            {auth.isLoggedIn && (
-                                <>
-                                    {getAuthName() && <MenuHeading marginTop={0}>{getAuthName()}</MenuHeading>}
-                                    {adminBottomMenu.map((props, i) => (
-                                        <MenuListItem {...props} key={'adminBottomMenu' + i} />
-                                    ))}
-                                </>
-                            )}
-                            {!auth.isLoggedIn && (
-                                <>
-                                    {guestBottomMenu.map((props, i) => (
-                                        <MenuListItem {...props} key={'guestBottomMenu' + i} />
-                                    ))}
-                                </>
-                            )}
-                        </List>
-                    </>
+                    <BottomMenu mnestixRole={mnestixRole} name={getAuthName() ?? ''} isLoggedIn={auth.isLoggedIn} />
                 )}
             </StyledDrawer>
         </>

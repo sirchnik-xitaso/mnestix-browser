@@ -1,6 +1,6 @@
 'use client';
 
-import { PrivateRoute } from 'components/azureAuthentication/PrivateRoute';
+import { PrivateRoute } from 'components/authentication/PrivateRoute';
 import { Add, FolderOutlined } from '@mui/icons-material';
 import { Box, Button, Divider, Paper, Skeleton, Typography } from '@mui/material';
 import { TabSelectorItem, VerticalTabSelector } from 'components/basics/VerticalTabSelector';
@@ -11,7 +11,7 @@ import { useNotificationSpawner } from 'lib/hooks/UseNotificationSpawner';
 import { messages } from 'lib/i18n/localization';
 import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { showError } from 'lib/util/ErrorHandlerUtil';
+import { useShowError } from 'lib/hooks/UseShowError';
 import TemplatesInfoGraphic from 'assets/templates_infographic.svg';
 import EmptyDefaultTemplate from 'assets/submodels/defaultEmptySubmodel.json';
 import { useAsyncEffect } from 'lib/hooks/UseAsyncEffect';
@@ -47,6 +47,8 @@ export default function Page() {
 
     const auth = useAuth();
     const bearerToken = auth.getBearerToken();
+
+    const { showError } = useShowError();
     const fetchAll = async () => {
         // fetching defaults first
         const _defaults = await getDefaultTemplates();
@@ -128,7 +130,7 @@ export default function Page() {
             setIsLoading(true);
             await fetchAll();
         } catch (e) {
-            showError(e, notificationSpawner);
+            showError(e);
         } finally {
             setIsLoading(false);
         }
@@ -178,7 +180,7 @@ export default function Page() {
             navigate.push(`/templates/${encodeURIComponent(newId)}`);
         } catch (e) {
             setIsCreatingTemplate(false);
-            showError(e, notificationSpawner);
+            showError(e);
         }
     };
 
@@ -192,14 +194,17 @@ export default function Page() {
             });
             await fetchCustoms(defaultItems);
         } catch (e) {
-            showError(e, notificationSpawner);
+            showError(e);
         }
     };
 
     return (
-        <PrivateRoute>
-            <Box sx={{ p: 3, maxWidth: '1125px', width: '100%', margin: '0 auto' }}>
-                <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <PrivateRoute currentRoute={'/templates'}>
+            <Box sx={{ p: 3, maxWidth: '1125px', width: '100%', margin: '0 auto' }} data-testid="templates-route-page">
+                <Box
+                    sx={{ mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                    data-testid="templates-header"
+                >
                     <ViewHeading title={<FormattedMessage {...messages.mnestix.templates} />} />
                     <Button
                         variant="contained"
