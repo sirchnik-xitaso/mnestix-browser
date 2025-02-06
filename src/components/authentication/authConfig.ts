@@ -64,9 +64,11 @@ export const authOptions: AuthOptions = {
                 if (account.id_token) {
                     const decodedToken = jwt.decode(account.id_token);
                     if (decodedToken) {
-                        if (account.provider === 'azure-ad') {
+                        if (account.provider === 'azure-ad' && account.access_token) {
+                            // Entra ID stores the username only in the access_token
+                            const decodedAccessToken = jwt.decode(account.access_token);
                             // @ts-expect-error name exits
-                            userName = decodedToken.name;
+                            userName = decodedAccessToken.name;
                         }
                         // @ts-expect-error role exits
                         roles = decodedToken.roles;
