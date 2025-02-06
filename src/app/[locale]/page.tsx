@@ -6,6 +6,7 @@ import { GoToListButton } from './_components/GoToListButton';
 
 export default async function page() {
     const t = await getTranslations('dashboard');
+
     return (
         <Box sx={{ p: 2, m: 'auto' }}>
             <Typography data-testid="welcome-text" variant="h1" color="primary" align="center" sx={{ mt: 2 }}>
@@ -18,7 +19,6 @@ export default async function page() {
 
             <DashboardInput />
             <GoToListButton />
-
             <Typography align="center" sx={{ mt: 4 }}>
                 {t('findOutMore-text')}:
             </Typography>

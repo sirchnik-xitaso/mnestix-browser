@@ -2,7 +2,7 @@
   "comment": "we will have english translation keys here",
   "aas-list": {
     "header": "AAS List",
-    "subHeader": "List of all AAS in the chosen repository.",
+    "subHeader": "You will find all AASs from your repository here. You can select an AAS repository to switch between data sources.",
     "picture": "Picture",
     "manufacturerHeading": "Manufacturer Name",
     "productDesignationHeading": "Manufacturer Product Designation",
@@ -14,7 +14,9 @@
     "select-repository": "Please select a repository",
     "titleComparisonAddButton": "Add AAS to comparison",
     "titleViewAASButton": "View AAS",
-    "maxElementsWarning": "Cannot compare more than 3 elements"
+    "maxElementsWarning": "Cannot compare more than 3 elements",
+    "goToCompare": "Compare",
+    "compareTooltip": "Compare"
   },
   "dashboard": {
     "welcome-text": "Welcome to Mnestix",
@@ -22,8 +24,9 @@
     "findOutMore-text": "Find out more",
     "list-btn-label": "or select via list",
     "list-btn-text": "Go to Aas List",
-    "scan-id-label": "Scan AAS ID or Asset ID",
-    "enter-manually-label": "or enter manually"
+    "aasOrAssetId": "AAS ID or Asset ID",
+    "scanIdLabel": "Scan AAS ID or Asset ID",
+    "enterManuallyLabel": "or enter manually"
   },
   "submodels": {
     "title": "Submodels",
@@ -32,9 +35,61 @@
       "linkedSegments": "Linked segments",
       "selectTimeframe": "Select timeframe"
     },
-    "renderError": "Submodel can't be rendered."
+    "renderError": "Submodel can't be rendered.",
+    "idLabel": "ID:",
+    "unknownModelType": "Unknown ModelType: {type}",
+    "errors": {
+      "NOT_FOUND": "Submodel not found",
+      "UNAUTHORIZED": "Unauthorized",
+      "INTERNAL_SERVER_ERROR": "Internal server error",
+      "UNKNOWN": "Unknown Error"
+    }
+  },
+  "qr-scanner": {
+    "errors": {
+      "default-callback-error-msg": "Could not open the QR code!",
+      "error-on-qr-scanner-open": "Could not open the QR scanner!"
+    }
+  },
+  "compare": {
+    "title": "Compare AAS",
+    "addButton": "Add another AAS",
+    "addFirstAasButton": "Add AAS",
+    "addAnother": "Add another AAS",
+    "collection": {
+      "show": "{idShort}",
+      "hide": "Hide"
+    },
+    "errors": {
+      "aasAlreadyAdded": "AAS cannot be added more than once.",
+      "moreAasFound": "More than one AAS found in the discovery service, please provide the AAS ID instead.",
+      "aasAddError": "AAS could not be added."
+    }
   },
   "settings": {
     "header": "Settings"
+  },
+  "errors": {
+    "unexpectedError": "Unexpected error",
+    "unauthorizedError": {
+      "title": "Unauthorized access",
+      "content": "You don`t have access to this resource. You may login or contact your administrator to get access."
+    },
+    "notFound": "Not found",
+    "urlNotFound": "No AAS with the given ID."
+  },
+  "authentication": {
+    "authentication-needed": "Authentication needed",
+    "contactAdmin": "You cannot visit this page. Please contact your administrator."
+  },
+  "mainMenu": {
+    "dashboard": "Dashboard",
+    "aasList": "AAS List",
+    "templates": "Templates",
+    "settings": "Settings",
+    "repository": "Repository",
+    "findOutMore": "Find out more",
+    "login": "Login",
+    "logout": "Logout"
   }
 }
