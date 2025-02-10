@@ -37,7 +37,13 @@
     },
     "renderError": "Teilmodell konnte nicht gerendert werden.",
     "idLabel": "ID:",
-    "unknownModelType": "Unbekannter ModelType: {type}"
+    "unknownModelType": "Unbekannter ModelType: {type}",
+    "errors": {
+      "NOT_FOUND": "Submodel nicht gefunden",
+      "UNAUTHORIZED": "Nicht autorisiert",
+      "INTERNAL_SERVER_ERROR": "Interner Server Error",
+      "UNKNOWN": "Unbekannter Fehler"
+    }
   },
   "qr-scanner": {
     "errors": {
