@@ -12,4 +12,5 @@ COPY ./yarn.lock ./yarn.lock
 
 RUN yarn install
  
+# Enable setting additional argument on bin directly
 ENTRYPOINT ["./node_modules/.bin/cypress"]

@@ -86,6 +86,9 @@ jobs:
         run: docker load -i mnestix-browser.tar
 
       - name: Run e2e tests
+        # 18-minute timeout to speed up failing tests that are retried too long.
+        # If the timeout is reached under normal test conditions, consider increasing
+        # the number of containers to run more tests in parallel.
         timeout-minutes: 18
         run: |
           docker compose -f compose.yml -f docker-compose/compose.test.yml --profile tests up -d &&
