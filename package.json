@@ -88,7 +88,8 @@
     "web-vitals": "^3.5.2"
   },
   "resolutions": {
-    "string-width": "4.2.3"
+    "string-width": "4.2.3",
+    "node-gyp": "^10.0.0"
   },
   "scripts": {
     "dev": "yarn prisma migrate deploy && yarn prisma generate && next dev --turbo",
