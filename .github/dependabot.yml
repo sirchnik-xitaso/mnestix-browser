@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: '15:30'
+      time: '15:37'
       timezone: 'Europe/Berlin'
     groups:
       patch:
@@ -16,13 +16,25 @@ updates:
         update-types: ['major']
   - package-ecosystem: 'docker'
     directory: '/'
+    groups:
+      all:
+        patterns:
+          - '*'
     schedule:
       interval: weekly
   - package-ecosystem: docker-compose
     directory: '/'
+    groups:
+      all:
+        patterns:
+          - '*'
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
     directory: '/'
+    groups:
+      all:
+        patterns:
+          - '*'
     schedule:
       interval: weekly
