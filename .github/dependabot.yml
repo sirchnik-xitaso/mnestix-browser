@@ -4,7 +4,8 @@ updates:
     directory: '/'
     schedule:
       interval: weekly
-      time: '07:00'
+      day: monday
+      time: '15:30'
       timezone: 'Europe/Berlin'
     groups:
       patch:
