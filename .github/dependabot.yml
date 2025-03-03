@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      time: '07:00'
+      timezone: 'Europe/Berlin'
+    groups:
+      patch:
+        update-types: ['patch']
+      minor:
+        update-types: ['minor']
+      major:
+        update-types: ['major']
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker-compose
+    directory: '/'
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
