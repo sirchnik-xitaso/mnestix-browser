@@ -102,7 +102,7 @@ services:
       - mnestix-network
 
   aas-environment:
-    image: eclipsebasyx/aas-environment:2.0.0-milestone-03.1
+    image: eclipsebasyx/aas-environment:2.0.0-milestone-05
     container_name: aas-environment
     profiles: ['', 'basyx', 'tests']
     depends_on:
