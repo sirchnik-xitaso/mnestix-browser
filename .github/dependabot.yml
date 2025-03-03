@@ -5,24 +5,36 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: '15:30'
+      time: '15:37'
       timezone: 'Europe/Berlin'
     groups:
-      patch:
+      yarn-patch:
         update-types: ['patch']
-      minor:
+      yarn-minor:
         update-types: ['minor']
-      major:
+      yarn-major:
         update-types: ['major']
   - package-ecosystem: 'docker'
     directory: '/'
+    groups:
+      docker-all:
+        patterns:
+          - '*'
     schedule:
       interval: weekly
   - package-ecosystem: docker-compose
     directory: '/'
+    groups:
+      compose-all:
+        patterns:
+          - '*'
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
     directory: '/'
+    groups:
+      actions-all:
+        patterns:
+          - '*'
     schedule:
       interval: weekly
