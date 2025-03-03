@@ -81,7 +81,7 @@ services:
       - mnestix-network
 
   mongodb:
-    image: mongo:5
+    image: mongo:8
     container_name: mongodb
     profiles: ['', 'basyx', 'tests']
     environment:
