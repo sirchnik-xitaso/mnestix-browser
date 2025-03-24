@@ -67,7 +67,20 @@
     }
   },
   "settings": {
-    "header": "Einstellungen"
+    "header": "Einstellungen",
+    "subHeader": "Hinzufügen, Entfernen oder Ändern von Einstellungen und Konfigurationen für verschiedene Funktionen innerhalb Ihrer AAS-Umgebung.",
+    "roles": {
+      "title": "Rollen Management",
+      "subtitle": "Verwalten von Rollen und Berechtigungen.",
+      "tableHeader": {
+        "name": "Rolle",
+        "action": "Aktion",
+        "type": "Typ",
+        "aasIds": "AAS IDs",
+        "submodelIds": "Submodel IDs",
+        "permissions": "Berechtigungen"
+      }
+    }
   },
   "errors": {
     "unexpectedError": "Unerwarteter Fehler",
@@ -80,7 +93,7 @@
   },
   "authentication": {
     "authentication-needed": "Authentifizierung erforderlich",
-    "contactAdmin": "You cannot visit this page. Please contact your administrator."
+    "contactAdmin": "Sie können diese Seite nicht besuchen. Bitte wenden Sie sich an Ihren Administrator."
   },
   "mainMenu": {
     "dashboard": "Dashboard",

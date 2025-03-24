@@ -104,7 +104,6 @@ export function TransferDialog(props: DialogProps) {
         try {
             setIsSubmitting(true);
             const response = await transferAasWithSubmodels(dtoToSubmit);
-            console.log(response);
             processResult(response);
         } catch {
             notificationSpawner.spawn({
@@ -176,6 +175,7 @@ export function TransferDialog(props: DialogProps) {
                     right: 8,
                     top: 8,
                     color: theme.palette.grey[500],
+                    zIndex: 1,
                 })}
             >
                 <CloseIcon />

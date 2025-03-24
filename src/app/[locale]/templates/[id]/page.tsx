@@ -1,7 +1,7 @@
 'use client';
 
 import { PrivateRoute } from 'components/authentication/PrivateRoute';
-import { CheckCircle, CloudUploadOutlined, Delete, MoreVert, Restore } from '@mui/icons-material';
+import { CheckCircle, CloudUploadOutlined, ContentCopy, Delete, MoreVert, Restore } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -350,6 +350,22 @@ export default function Page() {
                             <Fade in={wasRecentlySaved} timeout={500}>
                                 <CheckCircle color="success" sx={{ mr: 1 }} />
                             </Fade>
+                            <Button
+                                variant="outlined"
+                                startIcon={<ContentCopy />}
+                                onClick={() => {
+                                    navigator.clipboard.writeText(
+                                        id || '',
+                                    );
+                                    notificationSpawner.spawn({
+                                        message: intl.formatMessage(messages.mnestix.templateIdCopied, { id }),
+                                        severity: 'success',
+                                    });
+                                }}
+                                style={{ marginRight: '1rem' }}
+                            >
+                                {intl.formatMessage(messages.mnestix.copyTemplateId)}
+                            </Button>
                             <Button
                                 variant="contained"
                                 startIcon={<CloudUploadOutlined />}
