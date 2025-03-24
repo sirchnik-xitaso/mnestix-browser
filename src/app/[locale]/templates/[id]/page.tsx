@@ -4,6 +4,7 @@ import { PrivateRoute } from 'components/authentication/PrivateRoute';
 import { CheckCircle, CloudUploadOutlined, Delete, MoreVert, Restore } from '@mui/icons-material';
 import {
     Box,
+    Button,
     Divider,
     Fade,
     IconButton,
@@ -30,7 +31,6 @@ import {
 } from 'lib/util/SubmodelViewObjectUtil';
 import { TemplateEditFields, TemplateEditFieldsProps } from '../_components/template-edit/TemplateEditFields';
 import { useAuth } from 'lib/hooks/UseAuth';
-import { LoadingButton } from '@mui/lab';
 import cloneDeep from 'lodash/cloneDeep';
 import { Qualifier, Submodel } from '@aas-core-works/aas-core3.0-typescript/types';
 import { useAsyncEffect } from 'lib/hooks/UseAsyncEffect';
@@ -350,7 +350,7 @@ export default function Page() {
                             <Fade in={wasRecentlySaved} timeout={500}>
                                 <CheckCircle color="success" sx={{ mr: 1 }} />
                             </Fade>
-                            <LoadingButton
+                            <Button
                                 variant="contained"
                                 startIcon={<CloudUploadOutlined />}
                                 disabled={!changesMade}
@@ -358,7 +358,7 @@ export default function Page() {
                                 onClick={onSaveChanges}
                             >
                                 <FormattedMessage {...messages.mnestix.saveChanges} />
-                            </LoadingButton>
+                            </Button>
                             <IconButton sx={{ ml: 1 }} onClick={handleMenuClick} className="more-button">
                                 <MoreVert />
                             </IconButton>
