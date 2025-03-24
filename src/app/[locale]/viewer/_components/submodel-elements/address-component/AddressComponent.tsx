@@ -95,15 +95,15 @@ export function AddressComponent(props: AddressComponentProps) {
             )}
             {phone.length > 0 && (
                 <AddressGroupWithIcon icon={<Phone color="primary" fontSize="small" />}>
-                    {phone.map((value, index) => (
-                        <PhoneElement el={value} key={'phone' + index} />
+                    {phone.map((value) => (
+                        <PhoneElement el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {fax.length > 0 && (
                 <AddressGroupWithIcon icon={<Print color="primary" fontSize="small" />}>
-                    {fax.map((value, index) => (
-                        <FaxElement el={value} key={'fax' + index} /> // continue
+                    {fax.map((value) => (
+                        <FaxElement el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
