@@ -89,49 +89,49 @@ export function AddressComponent(props: AddressComponentProps) {
             {sortedAddress.length > 0 && (
                 <AddressGroupWithIcon icon={<Place color="primary" fontSize="small" />} sx={{ mt: 1 }}>
                     {sortedAddress.map((value) => (
-                        <AddressElement el={value as IDataElement} key={value.idShort} />
+                        <AddressElement key={value.idShort} el={value as IDataElement} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {phone.length > 0 && (
                 <AddressGroupWithIcon icon={<Phone color="primary" fontSize="small" />}>
                     {phone.map((value) => (
-                        <PhoneElement el={value} key={value.idShort} />
+                        <PhoneElement key={value.idShort}  el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {fax.length > 0 && (
                 <AddressGroupWithIcon icon={<Print color="primary" fontSize="small" />}>
                     {fax.map((value) => (
-                        <FaxElement el={value} key={value.idShort} />
+                        <FaxElement key={value.idShort}  el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {email.length > 0 && (
                 <AddressGroupWithIcon icon={<Mail color="primary" fontSize="small" />}>
                     {email.map((value) => (
-                        <EmailElement el={value} key={value.idShort} />
+                        <EmailElement key={value.idShort}  el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {ipCommunication.length > 0 && (
                 <AddressGroupWithIcon icon={<DialerSip color="primary" fontSize="small" />} sx={{ mt: 1 }}>
                     {ipCommunication.map((value) => (
-                        <IpElement el={value} key={value.idShort} />
+                        <IpElement key={value.idShort}  el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {additionalLink.length > 0 && (
                 <AddressGroupWithIcon icon={<Public color="primary" fontSize="small" />}>
                     {additionalLink.map((value) => (
-                        <LinkElement el={value} key={value.idShort} />
+                        <LinkElement key={value.idShort}  el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
             {vatNumber.length > 0 && (
                 <AddressGroupWithIcon icon={<Info color="primary" fontSize="small" />}>
                     {vatNumber.map((value) => (
-                        <VatElement el={value} key={value.idShort} />
+                        <VatElement key={value.idShort}  el={value} key={value.idShort} />
                     ))}
                 </AddressGroupWithIcon>
             )}
