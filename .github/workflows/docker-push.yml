@@ -18,6 +18,12 @@ env:
   IMAGE_NAME: mnestix/mnestix-browser
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        run: 'echo 1'
+
   ci:
     uses: ./.github/workflows/ci.yml
     permissions:
