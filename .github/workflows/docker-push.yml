@@ -15,7 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # github.repository as <account>/<repo>
   IMAGE_NAME: mnestix/mnestix-browser
 
 jobs:
