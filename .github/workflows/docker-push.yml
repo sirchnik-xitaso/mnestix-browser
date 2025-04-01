@@ -25,6 +25,7 @@ jobs:
         run: 'echo 1'
 
   ci:
+    needs: ['test']
     uses: ./.github/workflows/ci.yml
     permissions:
       contents: read
