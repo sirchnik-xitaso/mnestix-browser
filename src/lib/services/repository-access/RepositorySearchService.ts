@@ -5,14 +5,10 @@ import { AssetAdministrationShell, Submodel } from '@aas-core-works/aas-core3.0-
 import { PrismaConnector } from 'lib/services/database/PrismaConnector';
 import { IPrismaConnector } from 'lib/services/database/PrismaConnectorInterface';
 import { Reference } from '@aas-core-works/aas-core3.0-typescript/types';
-import {
-    ApiResponseWrapper,
-    ApiResultStatus,
-    wrapErrorCode,
-    wrapSuccess,
-} from 'lib/util/apiResponseWrapper/apiResponseWrapper';
+import { ApiResponseWrapper, wrapErrorCode, wrapSuccess } from 'lib/util/apiResponseWrapper/apiResponseWrapper';
 import { IAssetAdministrationShellRepositoryApi, ISubmodelRepositoryApi } from 'lib/api/basyx-v3/apiInterface';
 import { PaginationData } from 'lib/api/basyx-v3/types';
+import { ApiResultStatus } from 'lib/util/apiResponseWrapper/apiResultStatus';
 
 export type RepoSearchResult<T> = {
     searchResult: T;
@@ -70,11 +66,19 @@ export class RepositorySearchService {
         );
     }
 
+    //TODO (MNES-1608): Split this file into multiple files, refactor its methods and add tests
     async getAasRepositories() {
-        return this.prismaConnector.getConnectionDataByTypeAction({
-            id: '0',
-            typeName: 'AAS_REPOSITORY',
-        });
+        const defaultRepositoryClient = process.env.AAS_REPO_API_URL;
+        let repositories: string[] = [];
+        try {
+            repositories = await this.prismaConnector.getConnectionDataByTypeAction({
+                id: '0',
+                typeName: 'AAS_REPOSITORY',
+            });
+        } catch (error) {
+            this.log.warn('Failed to get AAS repositories', error);
+        }
+        return defaultRepositoryClient ? [defaultRepositoryClient, ...repositories] : repositories;
     }
 
     async getSubmodelRepositories() {
