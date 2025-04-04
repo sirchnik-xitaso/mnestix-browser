@@ -141,19 +141,9 @@ jobs:
         id: extract_branch
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
-      - name: Determine new version
-        id: determine_new_version
-        run: |
-          yarn global add semver
-          VERSION=$(node scripts/release.js 2>stderr.log)
-          if [[ -s stderr.log ]]; then
-            echo "Error determining version:"
-            cat stderr.log
-          fi
-          echo "new_version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Build and push docker images
         uses: docker/build-push-action@v6
+        if: github.ref == 'refs/heads/dev'
         with:
           platforms: linux/amd64,linux/arm64
           context: '.'
@@ -162,7 +152,13 @@ jobs:
             type=local,src=/tmp/buildx-amd64-cache
           target: production
           push: true
-          tags: |
-            ${{ github.ref == 'refs/heads/main' && format('{0}:{1}', env.IMAGE_NAME, steps.determine_new_version.outputs.new_version) || '' }}
-            ${{ github.ref == 'refs/heads/main' && format('{0}:latest', env.IMAGE_NAME) || '' }}
-            ${{ github.ref != 'refs/heads/main' && format('{0}:{1}', env.IMAGE_NAME, steps.extract_branch.outputs.branch) || '' }}
+          tags: format('{0}:{1}', env.IMAGE_NAME, steps.extract_branch.outputs.branch)
+
+      - name: install release dependencies
+        if: github.ref == 'refs/heads/main'
+        run: |
+          yarn global add semantic-release @semantic-release/exec
+
+      - name: Release
+        if: github.ref == 'refs/heads/main'
+        run: yarn semantic-release
