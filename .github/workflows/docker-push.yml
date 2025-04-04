@@ -158,7 +158,7 @@ jobs:
             type=local,src=/tmp/buildx-amd64-cache
           target: production
           push: true
-          tags: format('{0}:{1}', env.IMAGE_NAME, steps.extract_branch.outputs.branch)
+          tags: ${{ format('{0}:{1}', env.IMAGE_NAME, steps.extract_branch.outputs.branch) }}
 
       - uses: actions/setup-node@v4
         if: github.ref == 'refs/heads/main'
