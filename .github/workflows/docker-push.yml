@@ -120,7 +120,7 @@ jobs:
           path: |
             /tmp/buildx-amd64-cache
           key: buildx-amd64-${{github.ref}}-${{ github.run_id }}
-          # can be build without cache
+          # Can be build without cache
           fail-on-cache-miss: false
       - name: Restore arm64 cache
         uses: actions/cache/restore@v4
@@ -128,7 +128,7 @@ jobs:
           path: |
             /tmp/buildx-arm64-cache
           key: buildx-arm64-${{github.ref}}-${{ github.run_id }}
-          # building takes ages
+          # Build often fails without cache
           fail-on-cache-miss: true
 
       - name: Set up QEMU
@@ -143,6 +143,7 @@ jobs:
           password: ${{ secrets.DOCKER_API_TOKEN }}
 
       - name: Extract branch name
+        if: github.ref == 'refs/heads/dev'
         id: extract_branch
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
@@ -158,6 +159,11 @@ jobs:
           target: production
           push: true
           tags: format('{0}:{1}', env.IMAGE_NAME, steps.extract_branch.outputs.branch)
+
+      - uses: actions/setup-node@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          cache: 'yarn'
 
       - name: Install release dependencies
         if: github.ref == 'refs/heads/main'
