@@ -5,14 +5,16 @@ const imageName = 'mnestix/mnestix-browser';
  */
 const config = {
     tagFormat: 'release/mnestix-browser-v${version}',
-    branches: ['main', { name: 'next', prerelease: true }],
+    branches: ['main', 'chore/improve-release', { name: 'next', prerelease: true }],
     plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
         [
             '@semantic-release/exec',
             {
-                publishCmd: `\
+                publishCmd:
+                    'echo 0' ||
+                    `\
             docker buildx build \
               --platform linux/amd64,linux/arm64 \
               --target=production \
