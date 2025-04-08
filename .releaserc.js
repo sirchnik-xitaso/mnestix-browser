@@ -5,7 +5,7 @@ const imageName = 'mnestix/mnestix-browser';
  */
 const config = {
     tagFormat: 'release/mnestix-browser-v${version}',
-    branches: ['main', { name: 'next', prerelease: true }],
+    branches: ['main', 'chore/improve-release', { name: 'next', prerelease: true }],
     plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
