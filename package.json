@@ -1,5 +1,6 @@
 {
   "name": "mnestix-browser",
+  "//version": "version is automatically increased by release",
   "version": "0.0.0",
   "type": "module",
   "private": true,

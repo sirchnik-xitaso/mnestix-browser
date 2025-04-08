@@ -3,6 +3,12 @@ name: CI
 on:
   workflow_call:
   pull_request:
+    paths-ignore:
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/CODEOWNERS'
+      - '.github/copilot-instructions.md'
+      - 'wiki/**'
+      - 'README.md'
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}

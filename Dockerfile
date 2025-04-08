@@ -1,4 +1,5 @@
 FROM node:22-alpine AS base
+
 RUN apk update && apk add --no-cache openssl
 
 FROM base AS deps
@@ -17,6 +18,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 FROM deps AS builder
 WORKDIR /app
 COPY . .
+
+ARG BUILD_VERSION
+RUN if [ -z "$BUILD_VERSION" ]; then \
+      apk add --no-cache git && \
+      BUILD_VERSION=$(git describe --tags --abbrev=0 | sed -n 's/.*-v\([0-9.]*\)$/\1/p' | xargs); \
+    fi && \
+    yarn version --no-git-tag-version --new-version "$BUILD_VERSION" 
 
 RUN yarn prisma migrate deploy
 RUN yarn prisma generate
