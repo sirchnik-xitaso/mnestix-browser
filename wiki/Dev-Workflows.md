@@ -48,8 +48,8 @@ The release process is fully automated and triggered by a push to the `main` bra
 4. A Docker image is built and pushed to Docker Hub.
 5. All issues resolved in the release are commented with a notification of the new release.
 
-You can use the dry-run mode of semantic-release to check the version bump before pushing to `main`:
+You can use the script `scripts/determine-next-version.sh` to determine the version bump done by semantic-release.
 
 ```bash
-yarn semantic-release --dry-run
+bash scripts/determine-next-version.sh
 ```
