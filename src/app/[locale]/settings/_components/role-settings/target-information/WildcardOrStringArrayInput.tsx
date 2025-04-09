@@ -3,27 +3,28 @@ import { Box, Button, Checkbox, FormControlLabel, IconButton, TextField, Typogra
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Control, Controller, useFieldArray, UseFormGetValues, UseFormSetValue } from 'react-hook-form';
-import { RoleFormModel } from 'app/[locale]/settings/_components/role-settings/RoleDialog';
 import { useTranslations } from 'next-intl';
+import { RuleFormModel } from 'app/[locale]/settings/_components/role-settings/RuleForm';
 
 type WildcardOrStringArrayInputProps = {
     type: string;
     rule: string;
-    control: Control<RoleFormModel>;
-    setValue: UseFormSetValue<RoleFormModel>;
-    getValues: UseFormGetValues<RoleFormModel>;
+    control: Control<RuleFormModel>;
+    setValue: UseFormSetValue<RuleFormModel>;
+    getValues: UseFormGetValues<RuleFormModel>;
 };
 
 export const WildcardOrStringArrayInput = (props: WildcardOrStringArrayInputProps) => {
-    const t = useTranslations('pages.settings');
+    const t = useTranslations('pages.settings.rules');
     const control = props.control;
     const checkIfWildcard = () => {
-        const value = props.getValues(`targetInformation.${props.type}.${props.rule}` as keyof typeof props.getValues);
-        // @ts-expect-error id exists
+        const value = props.getValues(
+            `targetInformation.${props.type}.${props.rule}` as 'targetInformation.aas.aasIds',
+        );
         return value[0].id === '*';
     };
     const [isWildcard, setIsWildcard] = useState(checkIfWildcard());
-    const { fields, append, remove } = useFieldArray<RoleFormModel>({
+    const { fields, append, remove } = useFieldArray<RuleFormModel>({
         control,
         name: `targetInformation.${props.type}.${props.rule}` as 'targetInformation.aas.aasIds',
     });
@@ -42,7 +43,7 @@ export const WildcardOrStringArrayInput = (props: WildcardOrStringArrayInputProp
 
             <FormControlLabel
                 control={<Checkbox checked={isWildcard} onChange={(e) => wildcardValueChanged(e.target.checked)} />}
-                label="Wildcard"
+                label={t('wildcardLabel')}
             />
             {!isWildcard && (
                 <>
@@ -84,7 +85,7 @@ export const WildcardOrStringArrayInput = (props: WildcardOrStringArrayInputProp
                             append({ id: '' });
                         }}
                     >
-                        {t('roles.buttons.add')}
+                        {t('buttons.add')}
                     </Button>
                 </>
             )}
